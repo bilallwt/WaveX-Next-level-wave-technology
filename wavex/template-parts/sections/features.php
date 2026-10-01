@@ -19,7 +19,7 @@ $rows = array(
 		'title'   => __( 'Websites engineered around how your business works', 'wavex' ),
 		'text'    => __( 'From responsive design and WordPress development to e-commerce, API integration and maintenance, we build and look after websites you can manage and grow.', 'wavex' ),
 		'items'   => array( 'web-development', 'wordpress-development', 'ecommerce-development', 'api-integration' ),
-		'image'   => array( 'img_web', 'web', '' ),
+		'image'   => array( 'img_web', 'group-web', '' ),
 	),
 	array(
 		'group'   => 'mobile-apps',
@@ -28,7 +28,7 @@ $rows = array(
 		'title'   => __( 'Apps shaped from first idea to launch and beyond', 'wavex' ),
 		'text'    => __( 'Shape the idea with MVP and product discovery, design the experience, develop the app, then modernize and maintain it as your needs change.', 'wavex' ),
 		'items'   => array( 'mvp-development', 'mobile-app-design', 'mobile-app-development', 'app-modernization' ),
-		'image'   => array( 'img_mobile', 'mobile', '' ),
+		'image'   => array( 'img_mobile', 'group-mobile', '' ),
 	),
 	array(
 		'group'   => 'seo-marketing',
@@ -37,7 +37,7 @@ $rows = array(
 		'title'   => __( 'Visibility built on solid technical foundations', 'wavex' ),
 		'text'    => __( 'Technical and on-page SEO help search engines understand your site, while content, social media and digital strategy support the growth that follows.', 'wavex' ),
 		'items'   => array( 'technical-seo', 'on-page-seo', 'content-marketing', 'digital-strategy' ),
-		'image'   => array( 'img_seo', 'serp', '' ),
+		'image'   => array( 'img_seo', 'group-seo', '' ),
 	),
 );
 ?>
@@ -45,7 +45,7 @@ $rows = array(
 	<section class="feature feature--<?php echo esc_attr( $row['tone'] ); ?><?php echo ( $i % 2 ) ? ' feature--flip' : ''; ?>" aria-labelledby="feature-<?php echo (int) $i; ?>">
 		<div class="feature__inner">
 			<div class="feature__media">
-				<?php wavex_visual( $row['image'][0], 'studio', $row['image'][1], 'feature__vis', array( 'loading' => 'lazy' ) ); ?>
+				<?php wavex_visual( $row['image'][0], 'visuals', $row['image'][1], 'feature__vis', array( 'loading' => 'lazy' ) ); ?>
 			</div>
 			<div class="feature__copy">
 				<p class="eyebrow"><?php echo esc_html( $row['eyebrow'] ); ?></p>

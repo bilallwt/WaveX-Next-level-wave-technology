@@ -223,3 +223,82 @@ function wavex_visual( $key, $dir, $name, $class = '', $extra = array() ) {
 	}
 	echo '</div>';
 }
+
+/**
+ * Segmented ring made of rounded arcs with an icon on each arc.
+ *
+ * @param array[] $items     Each: icon, label, optional url.
+ * @param string  $core_html Markup shown in the centre circle (already escaped).
+ * @param string  $class     Extra CSS class.
+ */
+function wavex_ring( $items, $core_html, $class = '' ) {
+	$n = count( $items );
+	if ( $n < 1 ) {
+		return;
+	}
+	$palette = array(
+		array( '#cfe0ff', '#2563e0' ),
+		array( '#bdeae5', '#25b0a4' ),
+		array( '#ebd2ee', '#a43fb0' ),
+		array( '#c3ecd6', '#2bbf78' ),
+	);
+	$r    = 164;
+	$span = 360 / $n;
+	$gap  = min( 14, $span * 0.18 );
+	$pt   = function ( $deg ) use ( $r ) {
+		$rad = deg2rad( $deg );
+		return round( 220 + $r * cos( $rad ), 2 ) . ' ' . round( 220 + $r * sin( $rad ), 2 );
+	};
+
+	printf( '<div class="rg %s"><svg viewBox="0 0 440 440" class="rg__svg" aria-hidden="true" focusable="false">', esc_attr( $class ) );
+	$badges = '';
+	foreach ( array_values( $items ) as $i => $item ) {
+		$start = -90 + $i * $span;
+		$col   = $palette[ $i % 4 ];
+		printf(
+			'<path class="rg__arc" pathLength="100" style="--i:%1$d;--sc:%2$s;--sd:%3$s" d="M %4$s A %5$d %5$d 0 0 1 %6$s"/>',
+			(int) $i,
+			esc_attr( $col[0] ),
+			esc_attr( $col[1] ),
+			esc_attr( $pt( $start + $gap ) ),
+			(int) $r,
+			esc_attr( $pt( $start + $span - $gap ) )
+		);
+		$mid  = deg2rad( $start + $span / 2 );
+		$left = 50 + ( $r / 440 * 100 ) * cos( $mid );
+		$top  = 50 + ( $r / 440 * 100 ) * sin( $mid );
+		$pos  = sprintf( 'left:%s%%;top:%s%%;color:%s', round( $left, 2 ), round( $top, 2 ), $col[1] );
+		$icon = wavex_icon( $item['icon'] );
+		if ( ! empty( $item['url'] ) ) {
+			$badges .= sprintf( '<a class="rg__badge" style="%s" href="%s" title="%s">%s<span class="screen-reader-text">%s</span></a>', esc_attr( $pos ), esc_url( $item['url'] ), esc_attr( $item['label'] ), $icon, esc_html( $item['label'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} else {
+			$badges .= sprintf( '<span class="rg__badge" style="%s">%s</span>', esc_attr( $pos ), $icon ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+	}
+	echo '<circle class="rg__core-bg" cx="220" cy="220" r="104"/><circle class="rg__orbit" cx="220" cy="220" r="118" fill="none"/></svg>';
+	echo '<div class="rg__core">' . $core_html . '</div>' . $badges . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+/**
+ * Ring for a service group (web, mobile, seo) with four representative services.
+ *
+ * @param string $group web|mobile|seo.
+ */
+function wavex_group_ring( $group ) {
+	$picks = array(
+		'web'    => array( 'web-development', 'wordpress-development', 'ecommerce-development', 'api-integration' ),
+		'mobile' => array( 'mobile-app-development', 'mobile-app-design', 'mvp-development', 'app-modernization' ),
+		'seo'    => array( 'technical-seo', 'on-page-seo', 'content-marketing', 'digital-strategy' ),
+	);
+	$groups   = wavex_studio_groups();
+	$services = wavex_services();
+	if ( ! isset( $picks[ $group ] ) ) {
+		return;
+	}
+	$items = array();
+	foreach ( $picks[ $group ] as $slug ) {
+		$items[] = array( 'icon' => $services[ $slug ]['icon'], 'label' => $services[ $slug ]['title'] );
+	}
+	$core = '<strong>' . (int) count( $groups[ $group ]['services'] ) . '</strong><span>' . esc_html__( 'services', 'wavex' ) . '</span><em>' . esc_html( $groups[ $group ]['label'] ) . '</em>';
+	wavex_ring( $items, $core, 'rg--' . $group );
+}

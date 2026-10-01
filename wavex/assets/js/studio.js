@@ -9,6 +9,7 @@
 
 	var tabs = Array.prototype.slice.call( root.querySelectorAll( '.studio__tab' ) );
 	var panels = Array.prototype.slice.call( root.querySelectorAll( '.studio__panel' ) );
+	var pills = Array.prototype.slice.call( root.querySelectorAll( '.sx__pill' ) );
 	var reduce = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 	var SLIDE = 10000;
 	var REPLAY = 11500; // Restart the same scene when it has finished.
@@ -482,11 +483,18 @@
 	function show( index, focus ) {
 		var count = Math.max( tabs.length, 1 );
 		current = ( index + count ) % count;
+		var grp = tabs[ current ] ? tabs[ current ].getAttribute( 'data-group' ) : null;
+		pills.forEach( function ( pill ) {
+			pill.setAttribute( 'aria-pressed', pill.getAttribute( 'data-group' ) === grp ? 'true' : 'false' );
+		} );
 		tabs.forEach( function ( tab, n ) {
 			var on = n === current;
 			tab.setAttribute( 'aria-selected', on ? 'true' : 'false' );
 			tab.setAttribute( 'tabindex', on ? '0' : '-1' );
 			panels[ n ].hidden = ! on;
+			if ( grp ) {
+				tab.hidden = tab.getAttribute( 'data-group' ) !== grp;
+			}
 			if ( ! on && panels[ n ]._wp ) {
 				panels[ n ]._wp.stop();
 			}
@@ -520,6 +528,19 @@
 				e.preventDefault();
 				stopAuto();
 				show( next, true );
+			}
+		} );
+	} );
+
+	pills.forEach( function ( pill ) {
+		pill.addEventListener( 'click', function () {
+			var g = pill.getAttribute( 'data-group' );
+			for ( var i = 0; i < tabs.length; i++ ) {
+				if ( tabs[ i ].getAttribute( 'data-group' ) === g ) {
+					stopAuto();
+					show( i, false );
+					return;
+				}
 			}
 		} );
 	} );

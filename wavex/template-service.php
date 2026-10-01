@@ -3,8 +3,7 @@
  * Template Name: Service Page
  * Template Post Type: page
  *
- * Individual service page under /services/: overview, animated "how it works"
- * scene, process, FAQs and related services.
+ * Individual service page under /services/.
  *
  * @package WaveX
  */
@@ -21,6 +20,7 @@ $details  = wavex_service_details();
 $scenes   = wavex_studio_scenes();
 $detail   = isset( $details[ $slug ] ) ? $details[ $slug ] : null;
 $scene    = isset( $scenes[ $slug ] ) ? $scenes[ $slug ] : null;
+$svc      = isset( $services[ $slug ] ) ? $services[ $slug ] : array( 'icon' => 'code', 'title' => get_the_title() );
 
 $group_label = __( 'Services', 'wavex' );
 $group_key   = null;
@@ -33,27 +33,40 @@ foreach ( wavex_studio_groups() as $gid => $group ) {
 		break;
 	}
 }
-$hero_scenes = array(
-	'web'    => array( 'img_web', 'web' ),
-	'mobile' => array( 'img_mobile', 'mobile' ),
-	'seo'    => array( 'img_seo', 'serp' ),
-);
-$hero_vis = $hero_scenes[ $group_id ];
 
-// Four-step process (Support is merged with Launch).
+// Other services in the same area: shown on the ring and as related cards.
+$others = array();
+if ( $group_key ) {
+	foreach ( $group_key['services'] as $other ) {
+		if ( $other !== $slug ) {
+			$others[] = $other;
+		}
+	}
+}
+$ring_items = array();
+foreach ( array_slice( $others, 0, 4 ) as $other ) {
+	$ring_items[] = array(
+		'icon'  => $services[ $other ]['icon'],
+		'label' => $services[ $other ]['title'],
+		'url'   => wavex_url( 'services/' . $other ),
+	);
+}
+
 $steps = wavex_approach_steps();
-$four  = array(
-	array( $steps[0]['title'], $steps[0]['text'] ),
-	array( $steps[1]['title'], $steps[1]['text'] ),
-	array( $steps[2]['title'], $steps[2]['text'] ),
-	array( __( 'Launch & support', 'wavex' ), $steps[3]['text'] . ' ' . $steps[4]['text'] ),
+$flow  = array(
+	array( $steps[0]['title'], $steps[0]['text'], 'chat' ),
+	array( $steps[1]['title'], $steps[1]['text'], 'compass' ),
+	array( $steps[2]['title'], $steps[2]['text'], 'code' ),
+	array( __( 'Launch & support', 'wavex' ), $steps[3]['text'] . ' ' . $steps[4]['text'], 'rocket' ),
 );
 
 while ( have_posts() ) :
 	the_post();
 	?>
 	<div class="gtheme gtheme--<?php echo esc_attr( $group_id ); ?>">
+
 	<header class="svc-hero">
+		<span class="svc-hero__orb" aria-hidden="true"></span>
 		<div class="svc-hero__copy">
 			<?php get_template_part( 'template-parts/components/breadcrumbs' ); ?>
 			<p class="eyebrow"><?php echo esc_html( $group_label ); ?></p>
@@ -64,8 +77,11 @@ while ( have_posts() ) :
 				<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'ghost' ); ?>
 			</div>
 		</div>
-		<div class="svc-hero__visual">
-			<?php wavex_visual( $hero_vis[0], 'studio', $hero_vis[1], 'svc-hero__vis', array( 'fetchpriority' => 'high' ) ); ?>
+		<div class="svc-hero__vis" data-vis>
+			<?php
+			$core = '<span class="rg__core-icon">' . wavex_icon( $svc['icon'] ) . '</span><span class="rg__core-name">' . esc_html( $svc['title'] ) . '</span>';
+			wavex_ring( $ring_items ? $ring_items : array( array( 'icon' => $svc['icon'], 'label' => $svc['title'] ) ), $core, 'rg--svc' );
+			?>
 		</div>
 	</header>
 
@@ -83,11 +99,14 @@ while ( have_posts() ) :
 		<section class="section" id="overview" aria-labelledby="svc-inc">
 			<div class="svc-grid">
 				<div>
-					<p class="eyebrow"><?php esc_html_e( 'Made for your business', 'wavex' ); ?></p>
+					<p class="eyebrow"><?php esc_html_e( 'What is included', 'wavex' ); ?></p>
 					<h2 class="section__title" id="svc-inc"><?php esc_html_e( 'What this service covers', 'wavex' ); ?></h2>
-					<ul class="ticks ticks--one ticks--big">
-						<?php foreach ( $detail['includes'] as $item ) : ?>
-							<li><span><?php echo wavex_icon( 'check' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( $item ); ?></span></li>
+					<ul class="inc-grid">
+						<?php foreach ( $detail['includes'] as $i => $item ) : ?>
+							<li class="inc-card">
+								<span class="inc-card__num"><?php echo esc_html( str_pad( (string) ( $i + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
+								<span><?php echo esc_html( $item ); ?></span>
+							</li>
 						<?php endforeach; ?>
 					</ul>
 					<?php if ( get_the_content() ) : ?>
@@ -95,7 +114,7 @@ while ( have_posts() ) :
 					<?php endif; ?>
 				</div>
 				<aside class="svc-card">
-					<p class="eyebrow"><?php esc_html_e( 'Start with a conversation', 'wavex' ); ?></p>
+					<span class="svc-card__icon"><?php echo wavex_icon( 'chat' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 					<h3><?php esc_html_e( 'Tell us what needs to work better.', 'wavex' ); ?></h3>
 					<p><?php esc_html_e( 'Share your goals or an existing project. A short message is enough to start.', 'wavex' ); ?></p>
 					<?php get_template_part( 'template-parts/components/contact-actions', null, array( 'topic' => get_the_title() ) ); ?>
@@ -111,43 +130,31 @@ while ( have_posts() ) :
 		<section class="studio studio--single" id="svc-how" aria-labelledby="svc-how-title">
 			<div class="studio__inner">
 				<header class="studio__head studio__head--left">
-					<p class="eyebrow"><?php esc_html_e( 'How it works', 'wavex' ); ?></p>
-					<h2 class="section__title" id="svc-how-title"><?php echo esc_html( $scene['title'] ); ?></h2>
-					<p><?php echo esc_html( $scene['text'] ); ?> <em><?php esc_html_e( 'Illustration of the process.', 'wavex' ); ?></em></p>
+					<p class="eyebrow"><?php esc_html_e( 'See how it works', 'wavex' ); ?></p>
+					<h2 class="section__title" id="svc-how-title"><?php esc_html_e( 'What happens behind the scenes', 'wavex' ); ?></h2>
+					<p><em><?php esc_html_e( 'An illustration of the process.', 'wavex' ); ?></em></p>
 				</header>
-				<div class="studio__shell studio__shell--single" data-studio-single>
+				<div class="sx sx--single" data-studio-single>
 					<div class="studio__main">
-						<div class="studio__panel" data-code="<?php echo esc_attr( wp_json_encode( $scene['code'] ) ); ?>">
-							<div class="stage"<?php echo ( 'wordpress' === $scene['scene'] ) ? '' : ' aria-hidden="true"'; ?>>
-								<?php get_template_part( 'template-parts/studio/scene', $scene['scene'] ); ?>
-							</div>
-							<div class="studio__bottom">
-								<figure class="code code--live" aria-label="<?php esc_attr_e( 'Example code, illustrative', 'wavex' ); ?>">
-									<figcaption class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span class="code__file"><?php esc_html_e( 'example code', 'wavex' ); ?></span></figcaption>
-									<pre class="code__body"><code class="studio__code" aria-hidden="true"></code><noscript><?php echo esc_html( implode( "\n", $scene['code'] ) ); ?></noscript></pre>
-								</figure>
-								<ol class="studio__steps">
-									<?php foreach ( $scene['steps'] as $step ) : ?>
-										<li><?php echo esc_html( $step ); ?></li>
-									<?php endforeach; ?>
-								</ol>
-							</div>
-						</div>
+						<?php get_template_part( 'template-parts/components/scene-panel', null, array( 'slug' => $slug, 'gkey' => $group_id, 'single' => true ) ); ?>
 					</div>
 				</div>
 			</div>
 		</section>
 	<?php endif; ?>
 
-	<section class="section section--tint" id="svc-process" aria-labelledby="svc-proc-title">
+	<section class="section" id="svc-process" aria-labelledby="svc-proc-title">
 		<p class="eyebrow"><?php esc_html_e( 'From the first conversation', 'wavex' ); ?></p>
 		<h2 class="section__title" id="svc-proc-title"><?php esc_html_e( 'A clear path to launch.', 'wavex' ); ?></h2>
-		<ol class="steps steps--four">
-			<?php foreach ( $four as $n => $step ) : ?>
-				<li class="steps__item">
-					<span class="steps__num"><?php echo esc_html( str_pad( (string) ( $n + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
-					<h3 class="steps__title"><?php echo esc_html( $step[0] ); ?></h3>
-					<p><?php echo esc_html( $step[1] ); ?></p>
+		<ol class="flow">
+			<?php foreach ( $flow as $n => $step ) : ?>
+				<li class="flow__item">
+					<span class="flow__node"><?php echo wavex_icon( $step[2] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+					<div class="flow__card">
+						<span class="flow__num"><?php echo esc_html( str_pad( (string) ( $n + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
+						<h3><?php echo esc_html( $step[0] ); ?></h3>
+						<p><?php echo esc_html( $step[1] ); ?></p>
+					</div>
 				</li>
 			<?php endforeach; ?>
 		</ol>
@@ -155,7 +162,7 @@ while ( have_posts() ) :
 	</section>
 
 	<?php if ( $detail ) : ?>
-		<section class="section" id="svc-faq" aria-labelledby="svc-faq-title">
+		<section class="section section--tint" id="svc-faq" aria-labelledby="svc-faq-title">
 			<div class="faq">
 				<div class="faq__intro">
 					<p class="eyebrow"><?php esc_html_e( 'Before we begin', 'wavex' ); ?></p>
@@ -167,22 +174,12 @@ while ( have_posts() ) :
 		</section>
 	<?php endif; ?>
 
-	<?php
-	$related = array();
-	if ( $group_key ) {
-		foreach ( $group_key['services'] as $other ) {
-			if ( $other !== $slug && count( $related ) < 3 ) {
-				$related[] = $other;
-			}
-		}
-	}
-	if ( $related ) :
-		?>
-		<section class="section section--tint" aria-labelledby="svc-rel">
+	<?php if ( $others ) : ?>
+		<section class="section" aria-labelledby="svc-rel">
 			<header class="section__head"><div><p class="eyebrow"><?php esc_html_e( 'Connect the pieces', 'wavex' ); ?></p><h2 class="section__title" id="svc-rel"><?php esc_html_e( 'Explore related services.', 'wavex' ); ?></h2></div>
 				<a class="link-arrow" href="<?php echo esc_url( wavex_url( 'services' ) ); ?>"><?php esc_html_e( 'All services', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a></header>
 			<div class="card-grid card-grid--3">
-				<?php foreach ( $related as $other ) : ?>
+				<?php foreach ( array_slice( $others, 0, 3 ) as $other ) : ?>
 					<a class="service-card" href="<?php echo esc_url( wavex_url( 'services/' . $other ) ); ?>">
 						<span class="service-card__icon"><?php echo wavex_icon( $services[ $other ]['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 						<h3 class="service-card__title"><?php echo esc_html( $services[ $other ]['title'] ); ?></h3>
@@ -193,6 +190,7 @@ while ( have_posts() ) :
 			</div>
 		</section>
 	<?php endif; ?>
+
 	</div>
 	<?php
 endwhile;
