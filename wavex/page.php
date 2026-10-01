@@ -1,6 +1,6 @@
 <?php
 /**
- * Default page.
+ * Default page (also used for Privacy Notice and any page you add).
  *
  * @package WaveX
  */
@@ -19,10 +19,10 @@ while ( have_posts() ) :
 	) );
 	?>
 	<div class="wrap wrap--narrow">
-		<div class="entry-content"><?php the_content(); ?></div>
+		<div class="entry-content prose"><?php the_content(); ?></div>
 	</div>
 	<?php
 endwhile;
 
-get_template_part( 'template-parts/sections/cta-bar' );
+get_template_part( 'template-parts/sections/contact-split' );
 get_footer();

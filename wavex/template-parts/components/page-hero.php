@@ -2,7 +2,7 @@
 /**
  * Inner-page heading block (the single H1 of the page).
  *
- * Args: title, text (optional), eyebrow (optional).
+ * Args: title, text (optional), eyebrow (optional), crumbs (bool, default true).
  *
  * @package WaveX
  */
@@ -15,9 +15,15 @@ $args = wp_parse_args( isset( $args ) ? $args : array(), array(
 	'title'   => '',
 	'text'    => '',
 	'eyebrow' => '',
+	'crumbs'  => true,
 ) );
 ?>
 <header class="page-hero">
+	<?php
+	if ( $args['crumbs'] ) {
+		get_template_part( 'template-parts/components/breadcrumbs' );
+	}
+	?>
 	<?php if ( $args['eyebrow'] ) : ?>
 		<p class="page-hero__eyebrow"><?php echo esc_html( $args['eyebrow'] ); ?></p>
 	<?php endif; ?>

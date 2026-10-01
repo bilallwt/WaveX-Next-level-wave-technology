@@ -5,10 +5,7 @@
 ( function () {
 	'use strict';
 
-	var root = document.querySelector( '[data-studio]' );
-	if ( ! root ) {
-		return;
-	}
+	function initStudio( root ) {
 
 	var tabs = Array.prototype.slice.call( root.querySelectorAll( '.studio__tab' ) );
 	var panels = Array.prototype.slice.call( root.querySelectorAll( '.studio__panel' ) );
@@ -297,6 +294,9 @@
 	}
 
 	function schedule() {
+		if ( tabs.length < 2 ) {
+			return;
+		}
 		if ( auto ) {
 			window.clearTimeout( auto );
 			auto = null;
@@ -330,7 +330,8 @@
 	}
 
 	function show( index, focus ) {
-		current = ( index + tabs.length ) % tabs.length;
+		var count = Math.max( tabs.length, 1 );
+		current = ( index + count ) % count;
 		tabs.forEach( function ( tab, n ) {
 			var on = n === current;
 			tab.setAttribute( 'aria-selected', on ? 'true' : 'false' );
@@ -340,10 +341,12 @@
 				panels[ n ]._wp.stop();
 			}
 		} );
-		if ( focus ) {
+		if ( focus && tabs[ current ] ) {
 			tabs[ current ].focus();
 		}
-		keepInView( tabs[ current ] );
+		if ( tabs[ current ] ) {
+			keepInView( tabs[ current ] );
+		}
 		restart( panels[ current ] );
 		if ( panels[ current ]._wp ) {
 			panels[ current ]._wp.run();
@@ -389,4 +392,7 @@
 		visible = true;
 		show( 0, false );
 	}
+	}
+
+	Array.prototype.forEach.call( document.querySelectorAll( '[data-studio], [data-studio-single]' ), initStudio );
 }() );

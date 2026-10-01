@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Bump when new pages or starter content are added.
+define( 'WAVEX_SEED_VERSION', 2 );
+
 /**
  * Create a page at a path (parent/child) if it does not exist yet.
  *
@@ -52,7 +55,7 @@ function wavex_ensure_page( $path, $title, $parent = 0, $template = '', $excerpt
  * Seed content.
  */
 function wavex_seed_content() {
-	if ( get_option( 'wavex_seeded' ) ) {
+	if ( (int) get_option( 'wavex_seed_version' ) >= WAVEX_SEED_VERSION ) {
 		return;
 	}
 
@@ -122,7 +125,35 @@ function wavex_seed_content() {
 		update_option( 'permalink_structure', '/%postname%/' );
 	}
 
-	update_option( 'wavex_seeded', 1 );
+	// Fill starter content only into pages that are still empty.
+	foreach ( wavex_starter_content() as $path => $html ) {
+		$page = get_page_by_path( $path );
+		if ( $page && '' === trim( (string) $page->post_content ) ) {
+			wp_update_post( array(
+				'ID'           => $page->ID,
+				'post_content' => wp_kses_post( $html ),
+			) );
+		}
+	}
+
+	// Use the Privacy Notice as WordPress's privacy page if none is set.
+	$privacy_page = get_page_by_path( 'privacy-policy' );
+	if ( $privacy_page && ! get_option( 'wp_page_for_privacy_policy' ) ) {
+		update_option( 'wp_page_for_privacy_policy', $privacy_page->ID );
+	}
+
+	update_option( 'wavex_seed_version', WAVEX_SEED_VERSION );
 	flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'wavex_seed_content' );
+
+/**
+ * Also seed on admin load, so updating the theme files adds new starter content
+ * without having to switch themes.
+ */
+function wavex_maybe_seed_on_admin() {
+	if ( current_user_can( 'switch_themes' ) ) {
+		wavex_seed_content();
+	}
+}
+add_action( 'admin_init', 'wavex_maybe_seed_on_admin' );

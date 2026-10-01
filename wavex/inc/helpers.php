@@ -156,3 +156,40 @@ function wavex_contact( $topic = '' ) {
 		'phone'          => wavex_opt( 'contact_phone' ),
 	);
 }
+
+/**
+ * Estimated reading time in minutes for the current post.
+ *
+ * @return int
+ */
+function wavex_reading_time() {
+	$words = str_word_count( wp_strip_all_tags( get_the_content() ) );
+	return max( 1, (int) ceil( $words / 220 ) );
+}
+
+/**
+ * Category filter chips for blog templates.
+ */
+function wavex_blog_filters() {
+	$cats = get_categories( array( 'hide_empty' => true ) );
+	if ( ! $cats ) {
+		return;
+	}
+	$current = is_category() ? get_queried_object_id() : 0;
+	echo '<ul class="filters" aria-label="' . esc_attr__( 'Filter articles', 'wavex' ) . '">';
+	printf(
+		'<li><a href="%s"%s>%s</a></li>',
+		esc_url( wavex_url( 'blog' ) ),
+		$current ? '' : ' aria-current="true"', // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		esc_html__( 'All articles', 'wavex' )
+	);
+	foreach ( $cats as $cat ) {
+		printf(
+			'<li><a href="%s"%s>%s</a></li>',
+			esc_url( get_category_link( $cat ) ),
+			( $current === $cat->term_id ) ? ' aria-current="true"' : '', // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			esc_html( $cat->name )
+		);
+	}
+	echo '</ul>';
+}

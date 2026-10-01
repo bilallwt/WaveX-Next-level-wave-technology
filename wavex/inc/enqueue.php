@@ -34,7 +34,7 @@ function wavex_enqueue_assets() {
 		)
 	);
 
-	if ( is_front_page() ) {
+	if ( is_front_page() || is_page_template( 'template-service.php' ) ) {
 		$studio = WAVEX_DIR . '/assets/js/studio.js';
 		wp_enqueue_script(
 			'wavex-studio',

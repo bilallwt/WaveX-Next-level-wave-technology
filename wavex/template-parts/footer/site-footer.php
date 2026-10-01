@@ -26,16 +26,6 @@ $company = array(
 );
 ?>
 <footer class="site-footer">
-	<?php if ( ! is_front_page() ) : ?>
-	<div class="site-footer__cta">
-		<div>
-			<h2 class="site-footer__cta-title"><?php echo esc_html( wavex_opt( 'cta_title' ) ); ?></h2>
-			<p><?php echo esc_html( wavex_opt( 'cta_text' ) ); ?></p>
-		</div>
-		<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'light' ); ?>
-	</div>
-	<?php endif; ?>
-
 	<div class="site-footer__top">
 		<div class="site-footer__brand">
 			<a class="site-brand__link" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
