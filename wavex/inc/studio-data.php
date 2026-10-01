@@ -188,3 +188,35 @@ function wavex_studio_scenes() {
 		),
 	);
 }
+
+/**
+ * Four related elements per service for the service-page hero visual.
+ * Each: icon, label. Generic names of the things involved in the work.
+ *
+ * @return array<string,array>
+ */
+function wavex_service_elements() {
+	return array(
+		'web-development'             => array( array( 'code', 'HTML' ), array( 'pen', 'CSS' ), array( 'cube', 'JavaScript' ), array( 'layout', 'Responsive' ) ),
+		'responsive-web-design'       => array( array( 'layout', 'Desktop' ), array( 'grid', 'Tablet' ), array( 'mobile', 'Phone' ), array( 'compass', 'Breakpoints' ) ),
+		'website-redesign'            => array( array( 'layout', 'New layout' ), array( 'pen', 'Fresh visuals' ), array( 'compass', 'Clear navigation' ), array( 'refresh', 'Content moved' ) ),
+		'ecommerce-development'       => array( array( 'grid', 'Catalogue' ), array( 'cart', 'Cart' ), array( 'check', 'Checkout' ), array( 'shield', 'Payments' ) ),
+		'wordpress-development'       => array( array( 'layout', 'Theme' ), array( 'grid', 'Blocks' ), array( 'cube', 'Post types' ), array( 'link', 'Plugins' ) ),
+		'wordpress-design'            => array( array( 'pen', 'Colours' ), array( 'layout', 'Templates' ), array( 'help', 'Typography' ), array( 'mobile', 'Responsive' ) ),
+		'website-maintenance'         => array( array( 'refresh', 'Updates' ), array( 'shield', 'Backups' ), array( 'check', 'Security' ), array( 'wrench', 'Fixes' ) ),
+		'api-integration'             => array( array( 'link', 'API' ), array( 'code', 'JSON' ), array( 'share', 'Webhooks' ), array( 'refresh', 'Sync' ) ),
+		'custom-software-development' => array( array( 'compass', 'Workflow' ), array( 'grid', 'Dashboard' ), array( 'cube', 'Automation' ), array( 'trend', 'Reports' ) ),
+		'technical-seo'               => array( array( 'share', 'Sitemap' ), array( 'code', 'Schema' ), array( 'rocket', 'Speed' ), array( 'search', 'Crawl' ) ),
+		'mobile-app-development'      => array( array( 'mobile', 'Screens' ), array( 'code', 'Code' ), array( 'link', 'Back end' ), array( 'check', 'Testing' ) ),
+		'mobile-app-design'           => array( array( 'layout', 'Wireframes' ), array( 'play', 'Prototype' ), array( 'grid', 'UI kit' ), array( 'compass', 'User flows' ) ),
+		'mvp-development'             => array( array( 'help', 'Idea' ), array( 'check', 'Core features' ), array( 'play', 'Prototype' ), array( 'rocket', 'Launch' ) ),
+		'app-modernization'           => array( array( 'mobile', 'New interface' ), array( 'code', 'Clean code' ), array( 'refresh', 'Updates' ), array( 'rocket', 'Release' ) ),
+		'app-maintenance'             => array( array( 'wrench', 'Bug fixes' ), array( 'refresh', 'Updates' ), array( 'check', 'Testing' ), array( 'rocket', 'Releases' ) ),
+		'search-engine-optimization'  => array( array( 'search', 'Keywords' ), array( 'pen', 'Content' ), array( 'link', 'Links' ), array( 'trend', 'Reports' ) ),
+		'on-page-seo'                 => array( array( 'pen', 'Titles' ), array( 'layout', 'Headings' ), array( 'check', 'Alt text' ), array( 'link', 'Internal links' ) ),
+		'digital-marketing'           => array( array( 'search', 'Search' ), array( 'share', 'Social' ), array( 'mail', 'Email' ), array( 'pen', 'Content' ) ),
+		'content-marketing'           => array( array( 'pen', 'Articles' ), array( 'grid', 'Calendar' ), array( 'help', 'Guides' ), array( 'rocket', 'Publishing' ) ),
+		'social-media-marketing'      => array( array( 'share', 'Platforms' ), array( 'chat', 'Posts' ), array( 'grid', 'Schedule' ), array( 'users', 'Engagement' ) ),
+		'digital-strategy'            => array( array( 'compass', 'Goals' ), array( 'users', 'Audience' ), array( 'megaphone', 'Channels' ), array( 'trend', 'Roadmap' ) ),
+	);
+}

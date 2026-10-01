@@ -2094,3 +2094,48 @@ a.rg__badge:hover { animation-play-state: paused; }
 @keyframes needle { from { transform: rotate(-95deg); } to { transform: rotate(95deg); } }
 .rg--hero:hover .rg__dot, .rg--ticks:hover .rg__tick { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .rg__badge, .rg__tick, .rg__dot, .rg__needle, .rg--orbit .rg__planet { animation: none !important; } .rg--orbit .rg__planet { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(var(--a) * -1)); } }
+
+/* ===== Service hero: service-specific element layouts ===== */
+.sa { position: relative; width: 100%; max-width: 440px; margin: 0 auto; }
+.sa-core { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 110px; height: 110px; margin: -55px 0 0 -55px; border-radius: 32px; background: var(--g); color: #fff; box-shadow: 0 20px 40px -16px var(--g); z-index: 2; animation: bob 4s ease-in-out infinite; }
+.sa-core .icon { width: 46px; height: 46px; stroke-width: 1.5; }
+/* cloud */
+.sa-cloud { aspect-ratio: 1; }
+.sa-cloud__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sa-cloud__lines path { stroke: var(--g); stroke-opacity: .45; stroke-width: 2; stroke-dasharray: 5 7; fill: none; animation: dashmove 3s linear infinite; }
+@keyframes dashmove { to { stroke-dashoffset: -24; } }
+.sa-chip { position: absolute; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px 9px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--c-line); box-shadow: var(--shadow-md); font: 700 .86rem var(--font-head); color: var(--c-ink); white-space: nowrap; transition: transform .2s, box-shadow .2s, border-color .2s; animation: bob 5s ease-in-out infinite; }
+.sa-chip .icon { width: 28px; height: 28px; padding: 6px; border-radius: 50%; background: var(--g-t); color: var(--g); }
+.sa-chip:hover { transform: translateY(-4px) scale(1.05); border-color: var(--g); box-shadow: 0 14px 28px -12px var(--g); animation-play-state: paused; }
+.sa-chip--0 { left: 0; top: 8%; } .sa-chip--1 { right: 0; top: 8%; animation-delay: -1.2s; } .sa-chip--2 { left: 0; bottom: 8%; animation-delay: -2.4s; } .sa-chip--3 { right: 0; bottom: 8%; animation-delay: -3.6s; }
+/* flow */
+.sa-flow { padding: 26px 22px 30px; border-radius: 24px; background: #fff; border: 1px solid var(--c-line); box-shadow: var(--shadow-lg); }
+.sa-flow__title { display: flex; align-items: center; gap: 10px; margin: 0 0 26px; font: 700 1.1rem var(--font-head); color: var(--c-ink); }
+.sa-flow__title .icon { width: 36px; height: 36px; padding: 8px; border-radius: 12px; background: var(--g); color: #fff; }
+.sa-flow ol { list-style: none; position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.sa-flow ol::before { content: ""; position: absolute; left: 12%; right: 12%; top: 27px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--g) 0 var(--p, 0%), var(--g-t) var(--p, 0%)); background: repeating-linear-gradient(90deg, var(--g) 0 8px, transparent 8px 14px); opacity: .55; }
+.sa-flow li { position: relative; display: grid; justify-items: center; gap: 10px; text-align: center; }
+.sa-flow__node { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--g-t); color: var(--g); box-shadow: 0 0 0 6px #fff; transition: transform .2s, background .2s, color .2s; position: relative; z-index: 1; animation: nodep 4s ease-in-out infinite; animation-delay: calc(var(--k) * .8s); }
+@keyframes nodep { 0%, 100% { background: var(--g-t); color: var(--g); } 20% { background: var(--g); color: #fff; } 40% { background: var(--g-t); color: var(--g); } }
+.sa-flow li:hover .sa-flow__node { transform: scale(1.14); background: var(--g); color: #fff; animation-play-state: paused; }
+.sa-flow__label { font: 600 .78rem/1.25 var(--font); color: var(--c-ink); }
+/* stack */
+.sa-stack { height: 360px; }
+.sa-stack__card { position: absolute; left: 6%; right: 6%; display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 18px; background: #fff; border: 1px solid var(--c-line); border-left: 6px solid var(--g); box-shadow: var(--shadow-md); transition: transform .3s; }
+.sa-stack__card strong { font: 700 1rem var(--font-head); color: var(--c-ink); }
+.sa-stack__icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--g-t); color: var(--g); }
+.sa-stack__card i { margin-left: auto; width: 46px; height: 8px; border-radius: 4px; background: var(--g-t); }
+.sa-stack__card--0 { top: 0; transform: rotate(-3deg); } .sa-stack__card--1 { top: 86px; transform: rotate(2deg) translateX(10px); } .sa-stack__card--2 { top: 172px; transform: rotate(-2deg) translateX(-8px); } .sa-stack__card--3 { top: 258px; transform: rotate(3deg) translateX(6px); }
+.sa-stack:hover .sa-stack__card { transform: rotate(0) translateX(0); }
+.sa-stack__card:hover { transform: translateX(8px) !important; box-shadow: 0 18px 30px -14px var(--g); }
+/* grid */
+.sa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.sa-grid__tile { display: grid; gap: 14px; align-content: end; min-height: 150px; padding: 20px; border-radius: 22px; background: var(--g-t); color: var(--g); transition: transform .25s, background .25s, color .25s, box-shadow .25s; }
+.sa-grid__tile .icon { width: 40px; height: 40px; stroke-width: 1.5; }
+.sa-grid__tile strong { font: 700 1rem var(--font-head); color: var(--c-ink); }
+.sa-grid__tile--0 { border-radius: 40px 22px 22px 22px; } .sa-grid__tile--1 { background: #fff; border: 2px solid var(--g-t); margin-top: 22px; } .sa-grid__tile--2 { background: #fff; border: 2px solid var(--g-t); margin-top: -22px; } .sa-grid__tile--3 { background: var(--g); color: #fff; border-radius: 22px 22px 40px 22px; } .sa-grid__tile--3 strong { color: #fff; }
+.sa-grid__tile:hover { transform: translateY(-6px); box-shadow: 0 20px 30px -16px var(--g); }
+.sa-grid__tile--0:hover, .sa-grid__tile--1:hover, .sa-grid__tile--2:hover { background: var(--g); color: #fff; } .sa-grid__tile--0:hover strong, .sa-grid__tile--1:hover strong, .sa-grid__tile--2:hover strong { color: #fff; }
+.rg--svc .rg__badge { color: var(--g); }
+@media (max-width: 600px) { .sa-chip { font-size: .74rem; padding: 7px 12px 7px 8px; } .sa-flow ol { grid-template-columns: 1fr 1fr; row-gap: 22px; } .sa-flow ol::before { display: none; } }
+@media (prefers-reduced-motion: reduce) { .sa-core, .sa-chip, .sa-flow__node, .sa-cloud__lines path { animation: none; } }

@@ -78,10 +78,7 @@ while ( have_posts() ) :
 			</div>
 		</div>
 		<div class="svc-hero__vis" data-vis>
-			<?php
-			$core = '<span class="rg__core-icon">' . wavex_icon( $svc['icon'] ) . '</span><span class="rg__core-name">' . esc_html( $svc['title'] ) . '</span>';
-			wavex_ring_v( 'orbit', $ring_items ? $ring_items : array( array( 'icon' => $svc['icon'], 'label' => $svc['title'] ) ), $core, 'rg--svc' );
-			?>
+			<?php get_template_part( 'template-parts/components/service-art', null, array( 'slug' => $slug ) ); ?>
 		</div>
 	</header>
 
