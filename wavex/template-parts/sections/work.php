@@ -21,7 +21,7 @@ if ( ! $projects->have_posts() ) {
 	return;
 }
 ?>
-<section class="section section--tint" aria-labelledby="work-title">
+<section class="section section--accent" aria-labelledby="work-title">
 	<div class="work-band">
 		<div class="work-band__intro">
 			<h2 class="section__title" id="work-title"><?php esc_html_e( 'Our work', 'wavex' ); ?></h2>

@@ -16,7 +16,7 @@ $faqs = array(
 	array( __( 'How do I start a project?', 'wavex' ), __( 'Book a free consultation and tell us about your requirements. We will take it from there.', 'wavex' ) ),
 );
 ?>
-<section class="section section--tint" aria-labelledby="faq-title">
+<section class="section section--mix" aria-labelledby="faq-title">
 	<div class="faq">
 		<div class="faq__intro">
 			<p class="eyebrow"><?php esc_html_e( 'FAQ', 'wavex' ); ?></p>

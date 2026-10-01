@@ -15,7 +15,7 @@ $points = array(
 	array( 'wrench', __( 'Support after launch', 'wavex' ), __( 'Website and app maintenance are available once your product is live.', 'wavex' ) ),
 );
 ?>
-<section class="section" aria-labelledby="why-title">
+<section class="section section--accent" aria-labelledby="why-title">
 	<div class="why">
 		<div class="why__intro">
 			<p class="eyebrow"><?php esc_html_e( 'Why WaveX', 'wavex' ); ?></p>

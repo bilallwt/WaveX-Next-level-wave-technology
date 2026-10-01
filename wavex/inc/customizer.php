@@ -16,8 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function wavex_defaults() {
 	return array(
-		'hero_title'     => __( 'Transform your business today', 'wavex' ),
-		'hero_text'      => __( 'WaveX Technology helps businesses and organizations build, improve, launch and grow their digital products and online presence.', 'wavex' ),
+		'hero_title'     => __( 'Engineering the next wave of digital products', 'wavex' ),
+		'hero_text'      => __( 'WaveX Technology designs, builds and grows websites, WordPress platforms, mobile apps and custom software, connected through APIs and supported by search and digital marketing.', 'wavex' ),
 		'hero_cta_label' => __( 'Free Consultation', 'wavex' ),
 		'cta_title'      => __( 'Have a project in mind?', 'wavex' ),
 		'cta_text'       => __( 'Tell us what you need and we will talk through the options with you.', 'wavex' ),
@@ -82,6 +82,25 @@ function wavex_customize_register( $wp_customize ) {
 		'width'       => 900,
 		'height'      => 900,
 	) ) );
+
+	$section_images = array(
+		'img_web'    => __( 'Web & WordPress image', 'wavex' ),
+		'img_mobile' => __( 'Mobile Apps image', 'wavex' ),
+		'img_seo'    => __( 'SEO & Marketing image', 'wavex' ),
+	);
+	foreach ( $section_images as $key => $label ) {
+		$wp_customize->add_setting( $key, array(
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+		) );
+		$wp_customize->add_control( new WP_Customize_Cropped_Image_Control( $wp_customize, $key, array(
+			'label'       => $label,
+			'description' => __( 'Optional. Leave empty to use the built-in illustration.', 'wavex' ),
+			'section'     => 'wavex_home',
+			'width'       => 800,
+			'height'      => 600,
+		) ) );
+	}
 
 	$wp_customize->add_section( 'wavex_footer', array(
 		'title'    => __( 'WaveX: Footer & Contact', 'wavex' ),

@@ -94,3 +94,34 @@ function wavex_button( $label, $url, $variant = 'primary' ) {
 		esc_html( $label )
 	);
 }
+
+/**
+ * Output a section image: the Customizer image if set, otherwise the bundled illustration.
+ *
+ * @param string $key    Theme mod key holding an attachment ID.
+ * @param string $file   Bundled file name in assets/img.
+ * @param string $alt    Alt text for the bundled illustration.
+ * @param string $class  CSS class.
+ * @param array  $extra  Extra attributes (e.g. fetchpriority, loading).
+ */
+function wavex_theme_image( $key, $file, $alt = '', $class = '', $extra = array() ) {
+	$id = (int) get_theme_mod( $key, 0 );
+
+	if ( $id && wp_get_attachment_image_url( $id, 'large' ) ) {
+		echo wp_get_attachment_image( $id, 'large', false, array_merge( array( 'class' => $class ), $extra ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return;
+	}
+
+	$attrs = '';
+	foreach ( $extra as $name => $value ) {
+		$attrs .= sprintf( ' %s="%s"', esc_attr( $name ), esc_attr( $value ) );
+	}
+
+	printf(
+		'<img class="%1$s" src="%2$s" width="800" height="600" alt="%3$s"%4$s>',
+		esc_attr( $class ),
+		esc_url( WAVEX_URI . '/assets/img/' . $file ),
+		esc_attr( $alt ),
+		$attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+	);
+}

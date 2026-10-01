@@ -17,7 +17,7 @@ $steps = array(
 	array( __( 'Support', 'wavex' ), __( 'We provide ongoing support after launch.', 'wavex' ) ),
 );
 ?>
-<section class="section" aria-labelledby="approach-title">
+<section class="section section--tint" aria-labelledby="approach-title">
 	<header class="section__head">
 		<h2 class="section__title" id="approach-title"><?php esc_html_e( 'How we work', 'wavex' ); ?></h2>
 		<a class="link-arrow" href="<?php echo esc_url( wavex_url( 'our-approach' ) ); ?>">

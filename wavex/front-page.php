@@ -12,8 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 get_header();
 
 get_template_part( 'template-parts/sections/hero' );
+get_template_part( 'template-parts/sections/ticker' );
 get_template_part( 'template-parts/sections/services-grid' );
-get_template_part( 'template-parts/sections/areas' );
+get_template_part( 'template-parts/sections/features' );
+get_template_part( 'template-parts/sections/stack' );
 get_template_part( 'template-parts/sections/work' );
 get_template_part( 'template-parts/sections/approach' );
 get_template_part( 'template-parts/sections/why' );
