@@ -18,16 +18,14 @@ $points = array(
 ?>
 <section class="whysec" aria-labelledby="why-title">
 	<div class="whysec__inner">
-		<div class="whysec__vis" aria-hidden="true">
-			<div class="deck">
-				<?php foreach ( array_reverse( array_keys( $points ), true ) as $i ) : ?>
-					<div class="deck__card deck__card--<?php echo (int) $i; ?>">
-						<span class="deck__icon"><?php echo wavex_icon( $points[ $i ][0] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-						<strong><?php echo esc_html( $points[ $i ][1] ); ?></strong>
-						<i></i><i></i>
-					</div>
-				<?php endforeach; ?>
-			</div>
+		<div class="whysec__vis" data-vis aria-hidden="true">
+			<?php
+			$ring_items = array();
+			foreach ( $points as $pt ) {
+				$ring_items[] = array( 'icon' => $pt[0], 'label' => $pt[1] );
+			}
+			wavex_ring_v( 'gauge', $ring_items, '<span class="rg__q">' . esc_html__( 'Why', 'wavex' ) . '</span><span class="rg__core-name">WaveX</span>', 'rg--why' );
+			?>
 		</div>
 		<div class="whysec__copy">
 			<p class="eyebrow"><?php esc_html_e( 'Why WaveX', 'wavex' ); ?></p>

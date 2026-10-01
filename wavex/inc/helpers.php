@@ -284,7 +284,7 @@ function wavex_ring( $items, $core_html, $class = '' ) {
  *
  * @param string $group web|mobile|seo.
  */
-function wavex_group_ring( $group ) {
+function wavex_group_ring( $group, $variant = 'thick' ) {
 	$picks = array(
 		'web'    => array( 'web-development', 'wordpress-development', 'ecommerce-development', 'api-integration' ),
 		'mobile' => array( 'mobile-app-development', 'mobile-app-design', 'mvp-development', 'app-modernization' ),
@@ -300,5 +300,140 @@ function wavex_group_ring( $group ) {
 		$items[] = array( 'icon' => $services[ $slug ]['icon'], 'label' => $services[ $slug ]['title'] );
 	}
 	$core = '<strong>' . (int) count( $groups[ $group ]['services'] ) . '</strong><span>' . esc_html__( 'services', 'wavex' ) . '</span><em>' . esc_html( $groups[ $group ]['label'] ) . '</em>';
-	wavex_ring( $items, $core, 'rg--' . $group );
+	wavex_ring_v( $variant, $items, $core, 'rg--' . $group );
+}
+
+/**
+ * Ring in one of several different designs.
+ *
+ * @param string  $variant thick|thin|ticks|radial|orbit|dots|gauge.
+ * @param array[] $items   Each: icon, label, optional url.
+ * @param string  $core_html Centre markup (escaped).
+ * @param string  $class   Extra class.
+ */
+function wavex_ring_v( $variant, $items, $core_html, $class = '' ) {
+	if ( 'thick' === $variant || ! $items ) {
+		wavex_ring( $items, $core_html, $class );
+		return;
+	}
+	$n   = count( $items );
+	$pal = array(
+		array( '#cfe0ff', '#2563e0' ),
+		array( '#bdeae5', '#25b0a4' ),
+		array( '#ebd2ee', '#a43fb0' ),
+		array( '#c3ecd6', '#2bbf78' ),
+	);
+	$pt  = function ( $deg, $r ) {
+		$rad = deg2rad( $deg );
+		return array( round( 220 + $r * cos( $rad ), 2 ), round( 220 + $r * sin( $rad ), 2 ) );
+	};
+	$arc = function ( $r, $a0, $a1, $col, $w, $i ) use ( $pt ) {
+		$p0 = $pt( $a0, $r );
+		$p1 = $pt( $a1, $r );
+		return sprintf(
+			'<path class="rg__s" pathLength="100" style="--i:%d;stroke:%s;stroke-width:%s" d="M %s %s A %d %d 0 %d 1 %s %s"/>',
+			$i,
+			$col,
+			$w,
+			$p0[0],
+			$p0[1],
+			$r,
+			$r,
+			( $a1 - $a0 ) > 180 ? 1 : 0,
+			$p1[0],
+			$p1[1]
+		);
+	};
+	$badge = function ( $item, $deg, $r, $col, $size = 13 ) use ( $pt ) {
+		$p    = $pt( $deg, $r );
+		$pos  = sprintf( 'left:%s%%;top:%s%%;width:%s%%;margin:-%s%% 0 0 -%s%%;color:%s', round( $p[0] / 4.4, 2 ), round( $p[1] / 4.4, 2 ), $size, $size / 2, $size / 2, $col );
+		$icon = wavex_icon( $item['icon'] );
+		if ( ! empty( $item['url'] ) ) {
+			return sprintf( '<a class="rg__badge" style="%s" href="%s" title="%s">%s<span class="screen-reader-text">%s</span></a>', esc_attr( $pos ), esc_url( $item['url'] ), esc_attr( $item['label'] ), $icon, esc_html( $item['label'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+		return sprintf( '<span class="rg__badge" style="%s">%s</span>', esc_attr( $pos ), $icon ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	};
+
+	$svg    = '';
+	$badges = '';
+	$items  = array_values( $items );
+
+	switch ( $variant ) {
+		case 'thin':
+			$svg .= '<circle cx="220" cy="220" r="178" fill="none" stroke="#e3ebf9" stroke-width="16"/><circle cx="220" cy="220" r="138" fill="none" stroke="#c9d9f5" stroke-width="2" stroke-dasharray="3 9"/>';
+			foreach ( $items as $i => $item ) {
+				$span = 360 / $n;
+				$a0   = -90 + $i * $span + 8;
+				$svg .= $arc( 178, $a0, $a0 + $span - 16, $pal[ $i % 4 ][1], 16, $i );
+				$badges .= $badge( $item, $a0 + ( $span - 16 ) / 2, 178, $pal[ $i % 4 ][1], 12 );
+			}
+			$svg .= '<circle class="rg__core-bg rg__core-bg--light" cx="220" cy="220" r="104"/>';
+			break;
+		case 'ticks':
+			for ( $k = 0; $k < 72; $k++ ) {
+				$seg  = (int) floor( $k * $n / 72 );
+				$long = ( 0 === $k % 6 );
+				$a    = $pt( -90 + $k * 5, $long ? 150 : 162 );
+				$b    = $pt( -90 + $k * 5, 188 );
+				$svg .= sprintf( '<line x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%d" stroke-linecap="round"/>', $a[0], $a[1], $b[0], $b[1], $long ? $pal[ $seg % 4 ][1] : $pal[ $seg % 4 ][0], $long ? 5 : 4 );
+			}
+			$svg .= '<circle class="rg__core-bg" cx="220" cy="220" r="118"/>';
+			foreach ( $items as $i => $item ) {
+				$badges .= $badge( $item, -90 + ( $i + .5 ) * 360 / $n, 188, $pal[ $i % 4 ][1], 12 );
+			}
+			break;
+		case 'radial':
+			$radii = array( 186, 152, 118, 84 );
+			$frac  = array( .8, .65, .92, .5 );
+			foreach ( $items as $i => $item ) {
+				if ( $i > 3 ) {
+					break;
+				}
+				$svg .= sprintf( '<circle cx="220" cy="220" r="%d" fill="none" stroke="%s" stroke-width="22" opacity=".55"/>', $radii[ $i ], $pal[ $i ][0] );
+				$end  = -90 + $frac[ $i ] * 359.9;
+				$svg .= $arc( $radii[ $i ], -90, $end, $pal[ $i ][1], 22, $i );
+				$badges .= $badge( $item, $end, $radii[ $i ], $pal[ $i ][1], 9 );
+			}
+			$svg .= '<circle class="rg__core-bg" cx="220" cy="220" r="56"/>';
+			break;
+		case 'orbit':
+			foreach ( array( 190, 146, 102 ) as $r ) {
+				$svg .= sprintf( '<circle class="rg__ring-o" cx="220" cy="220" r="%d" fill="none" stroke="#c9d6ee" stroke-width="2" stroke-dasharray="4 8"/>', $r );
+			}
+			$radii = array( 190, 146, 102, 190 );
+			foreach ( $items as $i => $item ) {
+				$badges .= $badge( $item, -60 + $i * 105, $radii[ $i % 4 ], $pal[ $i % 4 ][1], 15 );
+			}
+			$svg .= '<circle class="rg__core-bg" cx="220" cy="220" r="62"/>';
+			break;
+		case 'dots':
+			for ( $k = 0; $k < 36; $k++ ) {
+				$p    = $pt( -90 + $k * 10, 176 );
+				$big  = ( 0 === $k % 9 );
+				$svg .= sprintf( '<circle cx="%s" cy="%s" r="%d" fill="%s"/>', $p[0], $p[1], $big ? 9 : 5, $pal[ (int) floor( $k / 9 ) % 4 ][ $big ? 1 : 0 ] );
+			}
+			$svg .= '<circle cx="220" cy="220" r="136" fill="none" stroke="#dbe6f8" stroke-width="2"/><circle class="rg__core-bg" cx="220" cy="220" r="112"/>';
+			foreach ( $items as $i => $item ) {
+				$badges .= $badge( $item, -90 + ( $i + .5 ) * 360 / $n, 136, $pal[ $i % 4 ][1], 13 );
+			}
+			break;
+		case 'gauge':
+			$total = 220;
+			$span  = $total / $n;
+			foreach ( $items as $i => $item ) {
+				$a0    = 160 + $i * $span + 4;
+				$a1    = 160 + ( $i + 1 ) * $span - 4;
+				$svg  .= $arc( 170, $a0, $a1, $pal[ $i % 4 ][ 0 ], 44, $i );
+				$badges .= $badge( $item, ( $a0 + $a1 ) / 2, 170, $pal[ $i % 4 ][1], 14 );
+			}
+			for ( $k = 0; $k <= 22; $k++ ) {
+				$a    = $pt( 160 + $k * 10, 128 );
+				$b    = $pt( 160 + $k * 10, 118 );
+				$svg .= sprintf( '<line x1="%s" y1="%s" x2="%s" y2="%s" stroke="#b9c9e6" stroke-width="2" stroke-linecap="round"/>', $a[0], $a[1], $b[0], $b[1] );
+			}
+			$svg .= '<circle class="rg__core-bg" cx="220" cy="220" r="86"/>';
+			break;
+	}
+
+	printf( '<div class="rg rg--%s %s"><svg viewBox="0 0 440 440" class="rg__svg" aria-hidden="true" focusable="false">%s</svg><div class="rg__core">%s</div>%s</div>', esc_attr( $variant ), esc_attr( $class ), $svg, $core_html, $badges ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }

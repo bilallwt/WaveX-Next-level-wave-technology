@@ -2033,3 +2033,26 @@ a.rg__badge:hover { transform: scale(1.12); }
 .deck__card--1 { top: 122px; } .deck__card--2 { top: 244px; }
 .deck__card { padding: 16px 20px 18px; gap: 8px; }
 .deck__card i + i { display: none; }
+
+/* ===== Ring variants ===== */
+.sh-ring, .mega__promo-rings { display: block; }
+.hero__shapes::before, .hero__shapes::after, .mega__promo::after { display: none; }
+.rg__s { fill: none; stroke-linecap: round; stroke-dasharray: 100; }
+.is-playing .rg__s { animation: rg-draw 1.1s cubic-bezier(.3, .7, .2, 1) both; animation-delay: calc(var(--i) * .25s); }
+.rg__core-bg--light { fill: #fff; stroke: #cfe0ff; stroke-width: 3; filter: drop-shadow(0 10px 18px rgba(37, 99, 224, .16)); }
+.rg--thin .rg__core { color: var(--c-ink); }
+.rg__ring-o { transform-origin: 220px 220px; animation: spin 90s linear infinite; }
+.rg--ticks .rg__core strong, .rg--thin .rg__core strong { font-size: clamp(2.4rem, 5vw, 3.4rem); }
+.rg--radial .rg__core { padding: 0 34%; } .rg--radial .rg__core strong { font-size: 1.8rem; } .rg--radial .rg__core span, .rg--radial .rg__core em { display: none; }
+.rg--orbit .rg__core { padding: 0 30%; } .rg--svc .rg__core-icon .icon { width: 30px; height: 30px; } .rg--svc .rg__core-name { font-size: .7rem !important; line-height: 1.15; }
+.rg--gauge .rg__core { padding-top: 0; } .rg--why .rg__core-name { font-size: 1.5rem !important; }
+.rg--pj { max-width: 220px; } .rg--pj .rg__core { padding: 0 24%; } .rg--pj .rg__core-bg { fill: #0e4ea8; }
+.rg--pj .pj__mono { color: #fff; font-size: 1.5rem; }
+.rg--thin.rg--pj .pj__mono { color: var(--c-ink); }
+.rg--radial.rg--pj .rg__core { padding: 0 30%; } .rg--radial.rg--pj .pj__mono { font-size: 1rem; }
+.whysec__vis::before { display: none; }
+.rg--hero .rg__core span { font: 700 2.4cqw var(--font-head); }
+.pj__cover { min-height: 0; }
+.rg--pj.rg--thin .rg__core-bg--light { fill: #fff; }
+.rg--radial.rg--pj .rg__core span { display: block; }
+.rg--radial.rg--pj .rg__core-bg { fill: #0e4ea8; }

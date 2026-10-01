@@ -22,7 +22,15 @@ $mono = mb_strtoupper( mb_substr( get_the_title(), 0, 2 ) );
 		<?php if ( has_post_thumbnail() ) : ?>
 			<?php the_post_thumbnail( 'wavex-card', array( 'loading' => 'lazy' ) ); ?>
 		<?php else : ?>
-			<?php get_template_part( 'template-parts/components/project-art', null, array( 'idx' => $is_app ? array( 1, 3 )[ $idx % 2 ] : array( 0, 2, 4 )[ $idx % 3 ], 'mono' => $mono ) ); ?>
+			<?php
+			$variants = array( 'thin', 'ticks', 'radial', 'orbit', 'dots' );
+			$icons    = $is_app ? array( 'mobile', 'chat', 'rocket' ) : array( 'layout', 'link', 'code' );
+			$items    = array();
+			foreach ( $icons as $ic ) {
+				$items[] = array( 'icon' => $ic, 'label' => '' );
+			}
+			wavex_ring_v( $variants[ $idx % 5 ], $items, '<span class="pj__mono">' . esc_html( $mono ) . '</span>', 'rg--pj' );
+			?>
 		<?php endif; ?>
 	</span>
 	<span class="pj__body">

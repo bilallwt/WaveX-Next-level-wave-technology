@@ -77,21 +77,11 @@ while ( have_posts() ) :
 				<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'ghost' ); ?>
 			</div>
 		</div>
-		<div class="svc-hero__vis">
-			<div class="spec">
-				<div class="spec__bar"><i></i><i></i><i></i><code>service.json</code></div>
-				<div class="spec__body">
-					<span class="spec__icon"><?php echo wavex_icon( $svc['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-					<p class="spec__ln"><b>service</b>: <em>"<?php echo esc_html( $svc['title'] ); ?>"</em>,</p>
-					<p class="spec__ln"><b>area</b>: <em>"<?php echo esc_html( $group_label ); ?>"</em>,</p>
-					<p class="spec__ln"><b>includes</b>: [</p>
-					<?php foreach ( $detail ? array_slice( $detail['includes'], 0, 3 ) : array() as $inc ) : ?>
-						<p class="spec__ln spec__ln--in"><em>"<?php echo esc_html( $inc ); ?>"</em>,</p>
-					<?php endforeach; ?>
-					<p class="spec__ln">],</p>
-					<p class="spec__ln"><b>status</b>: <em class="spec__ok">"ready to talk"</em></p>
-				</div>
-			</div>
+		<div class="svc-hero__vis" data-vis>
+			<?php
+			$core = '<span class="rg__core-icon">' . wavex_icon( $svc['icon'] ) . '</span><span class="rg__core-name">' . esc_html( $svc['title'] ) . '</span>';
+			wavex_ring_v( 'orbit', $ring_items ? $ring_items : array( array( 'icon' => $svc['icon'], 'label' => $svc['title'] ) ), $core, 'rg--svc' );
+			?>
 		</div>
 	</header>
 
