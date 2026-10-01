@@ -11,18 +11,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $points = array(
-	array( 'layers', __( 'Web, mobile and marketing together', 'wavex' ), __( 'Websites, apps, SEO and digital marketing are handled by one team, so your pieces fit together.', 'wavex' ) ),
-	array( 'compass', __( 'Built around your requirements', 'wavex' ), __( 'Every project starts by understanding what you need, then planning the work before development begins.', 'wavex' ) ),
-	array( 'wrench', __( 'Support after launch', 'wavex' ), __( 'Website and app maintenance are available once your product is live.', 'wavex' ) ),
+	array( 'layers', __( 'Web, mobile and marketing together', 'wavex' ), __( 'Websites, apps, SEO and digital marketing are handled by one team, so your pieces fit together.', 'wavex' ), 'services' ),
+	array( 'compass', __( 'Built around your requirements', 'wavex' ), __( 'Every project starts by understanding what you need, then planning the work before development begins.', 'wavex' ), 'our-approach' ),
+	array( 'wrench', __( 'Support after launch', 'wavex' ), __( 'Website and app maintenance are available once your product is live.', 'wavex' ), 'services/website-maintenance' ),
 );
 ?>
 <section class="whysec" aria-labelledby="why-title">
 	<div class="whysec__inner">
-		<div class="whysec__vis" data-vis aria-hidden="true">
+		<div class="whysec__vis" data-vis>
 			<?php
 			$ring_items = array();
 			foreach ( $points as $pt ) {
-				$ring_items[] = array( 'icon' => $pt[0], 'label' => $pt[1] );
+				$ring_items[] = array( 'icon' => $pt[0], 'label' => $pt[1], 'url' => wavex_url( $pt[3] ) );
 			}
 			wavex_ring_v( 'gauge', $ring_items, '<span class="rg__q">' . esc_html__( 'Why', 'wavex' ) . '</span><span class="rg__core-name">WaveX</span>', 'rg--why' );
 			?>

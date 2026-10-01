@@ -17,10 +17,10 @@ $core = '<svg class="hr__mark" viewBox="0 0 30 30" fill="none" aria-hidden="true
 		wavex_ring_v(
 			'dots',
 			array(
-				array( 'icon' => 'layout', 'label' => 'Web' ),
-				array( 'icon' => 'cube', 'label' => 'Software' ),
-				array( 'icon' => 'megaphone', 'label' => 'Marketing' ),
-				array( 'icon' => 'mobile', 'label' => 'Mobile' ),
+				array( 'icon' => 'layout', 'label' => 'Web & WordPress', 'url' => wavex_url( 'services#web-wordpress' ) ),
+				array( 'icon' => 'cube', 'label' => 'Custom Software Development', 'url' => wavex_url( 'services/custom-software-development' ) ),
+				array( 'icon' => 'megaphone', 'label' => 'SEO & Marketing', 'url' => wavex_url( 'services#seo-marketing' ) ),
+				array( 'icon' => 'mobile', 'label' => 'Mobile Apps', 'url' => wavex_url( 'services#mobile-apps' ) ),
 			),
 			$core,
 			'rg--hero'

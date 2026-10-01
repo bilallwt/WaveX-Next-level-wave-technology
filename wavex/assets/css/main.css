@@ -2056,3 +2056,41 @@ a.rg__badge:hover { transform: scale(1.12); }
 .rg--pj.rg--thin .rg__core-bg--light { fill: #fff; }
 .rg--radial.rg--pj .rg__core span { display: block; }
 .rg--radial.rg--pj .rg__core-bg { fill: #0e4ea8; }
+
+/* ===== Ring: animated parts, hover effects, links ===== */
+.rg__link { cursor: pointer; outline: none; }
+.rg__link path, .rg__link line, .rg__link .seg { transition: transform .28s cubic-bezier(.3, .7, .2, 1), filter .28s, stroke .2s, stroke-width .2s; transform-origin: 220px 220px; }
+.rg__link:hover > path:not(.seg), .rg__link:focus-visible > path:not(.seg) { transform: scale(1.055); stroke: var(--sd, #2563e0); filter: drop-shadow(0 10px 14px rgba(15, 31, 69, .35)); }
+.rg__link:hover > .seg, .rg__link:focus-visible > .seg { transform: scale(1.055); filter: drop-shadow(0 10px 14px rgba(15, 31, 69, .35)); }
+.rg__link:hover .rg__tick, .rg__link:focus-visible .rg__tick { stroke: var(--sd); stroke-width: 7; animation-play-state: paused; opacity: 1; }
+.rg__link:focus-visible > path { outline: none; stroke-dasharray: none; }
+.rg__badge { pointer-events: auto; transition: scale .2s, box-shadow .2s; }
+a.rg__badge:hover, a.rg__badge:focus-visible { scale: 1.2; box-shadow: 0 12px 24px -8px rgba(15, 31, 69, .55), 0 0 0 4px currentColor; outline: none; }
+a.ring__badge { pointer-events: auto; transition: scale .2s, box-shadow .2s; }
+a.ring__badge:hover { scale: 1.2; box-shadow: 0 12px 24px -8px rgba(15, 31, 69, .55), 0 0 0 4px currentColor; }
+
+@keyframes bob { 50% { translate: 0 -6px; } }
+.rg__badge:not(.rg__planet) { animation: bob 4.2s ease-in-out infinite; }
+.rg__badge:nth-child(even):not(.rg__planet) { animation-delay: -2.1s; }
+.is-playing .rg__badge:not(.rg__planet) { animation: mk-pop .6s both, bob 4.2s ease-in-out .6s infinite; }
+.is-playing .rg__badge:nth-child(even):not(.rg__planet) { animation: mk-pop .6s both, bob 4.2s ease-in-out -1.5s infinite; }
+a.rg__badge:hover { animation-play-state: paused; }
+
+/* orbit: planets travel along their orbits, pause on hover */
+.rg--orbit { container-type: inline-size; }
+.rg--orbit .rg__planet, .is-playing .rg--orbit .rg__planet { position: absolute; left: 50%; top: 50%; width: 15%; margin: -7.5% 0 0 -7.5%; animation: orb var(--dur) linear infinite; }
+@keyframes orb {
+	from { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(var(--a) * -1)); }
+	to { transform: rotate(calc(var(--a) + 360deg)) translateX(var(--r)) rotate(calc((var(--a) + 360deg) * -1)); }
+}
+.rg--orbit:hover .rg__planet { animation-play-state: paused; }
+
+/* ticks: a wave of light travels round; dots: pulse in sequence; gauge: needle sweeps */
+@keyframes tickw { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
+.rg__tick { animation: tickw 3.6s ease-in-out infinite; animation-delay: calc(var(--k) * .05s); }
+@keyframes dotp { 50% { transform: scale(1.8); } }
+.rg__dot { transform-box: fill-box; transform-origin: center; animation: dotp 3.4s ease-in-out infinite; animation-delay: calc(var(--k) * .09s); }
+.rg__needle { transform-origin: 220px 220px; animation: needle 7s ease-in-out infinite alternate; }
+@keyframes needle { from { transform: rotate(-95deg); } to { transform: rotate(95deg); } }
+.rg--hero:hover .rg__dot, .rg--ticks:hover .rg__tick { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .rg__badge, .rg__tick, .rg__dot, .rg__needle, .rg--orbit .rg__planet { animation: none !important; } .rg--orbit .rg__planet { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(var(--a) * -1)); } }

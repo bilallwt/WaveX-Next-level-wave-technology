@@ -83,7 +83,7 @@ $total = count( $services );
 		<div class="ring" role="img" aria-label="<?php esc_attr_e( 'Diagram of the four service groups around WaveX', 'wavex' ); ?>">
 			<svg viewBox="0 0 440 440" class="ring__svg" aria-hidden="true" focusable="false">
 				<?php foreach ( $spans as $key => $span ) : ?>
-					<path class="seg seg--<?php echo esc_attr( $key ); ?>" d="M <?php echo esc_attr( $pt( $span[0] + $gap ) ); ?> A <?php echo (int) $r; ?> <?php echo (int) $r; ?> 0 0 1 <?php echo esc_attr( $pt( $span[1] - $gap ) ); ?>"/>
+					<a class="rg__link" href="<?php echo esc_url( wavex_url( 'services#' . ( 'web' === $key ? 'web-wordpress' : ( 'mobile' === $key ? 'mobile-apps' : ( 'seo' === $key ? 'seo-marketing' : 'web-wordpress' ) ) ) ) ); ?>"><title><?php echo esc_html( $groups[ $key ]['label'] ); ?></title><path class="seg seg--<?php echo esc_attr( $key ); ?>" d="M <?php echo esc_attr( $pt( $span[0] + $gap ) ); ?> A <?php echo (int) $r; ?> <?php echo (int) $r; ?> 0 0 1 <?php echo esc_attr( $pt( $span[1] - $gap ) ); ?>"/></a>
 				<?php endforeach; ?>
 				<circle class="ring__core" cx="220" cy="220" r="104"/>
 				<circle class="ring__orbit" cx="220" cy="220" r="118" fill="none"/>
@@ -94,7 +94,7 @@ $total = count( $services );
 				<em><?php esc_html_e( 'one team', 'wavex' ); ?></em>
 			</div>
 			<?php foreach ( $badge as $key => $pos ) : ?>
-				<span class="ring__badge ring__badge--<?php echo esc_attr( $key ); ?>" style="left:<?php echo esc_attr( $pos[0] ); ?>%;top:<?php echo esc_attr( $pos[1] ); ?>%"><?php echo wavex_icon( $groups[ $key ]['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+				<a class="ring__badge ring__badge--<?php echo esc_attr( $key ); ?>" href="<?php echo esc_url( wavex_url( 'services#' . ( 'web' === $key ? 'web-wordpress' : ( 'mobile' === $key ? 'mobile-apps' : ( 'seo' === $key ? 'seo-marketing' : 'web-wordpress' ) ) ) ) ); ?>" title="<?php echo esc_attr( $groups[ $key ]['label'] ); ?>" style="left:<?php echo esc_attr( $pos[0] ); ?>%;top:<?php echo esc_attr( $pos[1] ); ?>%"><?php echo wavex_icon( $groups[ $key ]['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
 			<?php endforeach; ?>
 		</div>
 
