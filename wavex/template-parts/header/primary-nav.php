@@ -46,9 +46,15 @@ $items = wavex_primary_menu();
 					<div class="mega" id="<?php echo esc_attr( $mega_id ); ?>">
 						<div class="mega__panel">
 							<div class="mega__grid">
-								<?php foreach ( $item['columns'] as $column ) : ?>
-									<div class="mega__col">
-										<p class="mega__title"><?php echo esc_html( $column['title'] ); ?></p>
+								<?php
+								foreach ( $item['columns'] as $c => $column ) :
+									$head_meta = wavex_link_meta( $column['links'][0][1] );
+									?>
+									<section class="mega__col mega__col--<?php echo ( $c % 2 ) ? 'b' : 'a'; ?>" aria-label="<?php echo esc_attr( $column['title'] ); ?>">
+										<header class="mega__head">
+											<span class="mega__head-icon"><?php echo wavex_icon( $head_meta['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+											<h3 class="mega__title"><?php echo esc_html( $column['title'] ); ?></h3>
+										</header>
 										<ul class="mega__links">
 											<?php
 											foreach ( $column['links'] as $link ) :
@@ -58,7 +64,7 @@ $items = wavex_primary_menu();
 													<a class="mega-card" href="<?php echo esc_url( wavex_url( $link[1] ) ); ?>">
 														<span class="mega-card__icon">
 															<?php if ( $meta['thumb'] ) : ?>
-																<img src="<?php echo esc_url( $meta['thumb'] ); ?>" alt="" width="44" height="44" loading="lazy">
+																<img src="<?php echo esc_url( $meta['thumb'] ); ?>" alt="" width="40" height="40" loading="lazy">
 															<?php else : ?>
 																<?php echo wavex_icon( $meta['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 															<?php endif; ?>
@@ -69,11 +75,12 @@ $items = wavex_primary_menu();
 																<span class="mega-card__desc"><?php echo esc_html( $meta['desc'] ); ?></span>
 															<?php endif; ?>
 														</span>
+														<?php echo wavex_icon( 'arrow', 'mega-card__go' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 													</a>
 												</li>
 											<?php endforeach; ?>
 										</ul>
-									</div>
+									</section>
 								<?php endforeach; ?>
 							</div>
 							<div class="mega__foot">
