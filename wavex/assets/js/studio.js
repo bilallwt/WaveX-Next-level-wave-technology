@@ -11,6 +11,8 @@
 	var panels = Array.prototype.slice.call( root.querySelectorAll( '.studio__panel' ) );
 	var reduce = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 	var SLIDE = 10000;
+	var REPLAY = 11500; // Restart the same scene when it has finished.
+	var replayTimer = null;
 	var typer = null;
 	var auto = null;
 	var userTouched = false;
@@ -27,6 +29,7 @@
 		var done = demo.querySelector( '[data-wp-done]' );
 		var chips = demo.querySelectorAll( '[data-block]' );
 		var timers = [];
+		var touched = false;
 		var dragging = null;
 		var moved = false;
 		var MAX = 6;
@@ -129,6 +132,7 @@
 		}
 
 		function runAuto() {
+			touched = false;
 			reset();
 			if ( reduce ) {
 				[ 'heading', 'image', 'button' ].forEach( function ( t ) { addBlock( t ); } );
@@ -189,6 +193,7 @@
 				if ( e.button !== 0 ) {
 					return;
 				}
+				touched = true;
 				cancelAuto();
 				moved = false;
 				dragging = { type: chip.getAttribute( 'data-block' ), label: chip.textContent, x: e.clientX, y: e.clientY };
@@ -201,18 +206,23 @@
 					moved = false;
 					return;
 				}
+				touched = true;
 				cancelAuto();
 				addBlock( chip.getAttribute( 'data-block' ) );
 			} );
 		} );
 
-		demo.querySelector( '[data-wp-reset]' ).addEventListener( 'click', reset );
+		demo.querySelector( '[data-wp-reset]' ).addEventListener( 'click', function () {
+			touched = false;
+			reset();
+		} );
 		demo.querySelector( '[data-wp-publish]' ).addEventListener( 'click', function () {
+			touched = true;
 			cancelAuto();
 			publish();
 		} );
 
-		return { run: runAuto, stop: cancelAuto };
+		return { run: runAuto, stop: cancelAuto, isTouched: function () { return touched; } };
 	}
 
 	var wpApi = null;
@@ -448,6 +458,27 @@
 		}
 	}
 
+	function scheduleReplay() {
+		if ( replayTimer ) {
+			window.clearTimeout( replayTimer );
+			replayTimer = null;
+		}
+		if ( reduce ) {
+			return;
+		}
+		replayTimer = window.setTimeout( function () {
+			var panel = panels[ current ];
+			// Only replay while on screen, and never over something the visitor is playing with.
+			if ( visible && panel && ! ( panel._wp && panel._wp.isTouched() ) ) {
+				restart( panel );
+				if ( panel._wp ) {
+					panel._wp.run();
+				}
+			}
+			scheduleReplay();
+		}, REPLAY );
+	}
+
 	function show( index, focus ) {
 		var count = Math.max( tabs.length, 1 );
 		current = ( index + count ) % count;
@@ -471,6 +502,7 @@
 			panels[ current ]._wp.run();
 		}
 		schedule();
+		scheduleReplay();
 	}
 
 	tabs.forEach( function ( tab, n ) {
