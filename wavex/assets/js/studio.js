@@ -394,5 +394,8 @@
 	}
 	}
 
-	Array.prototype.forEach.call( document.querySelectorAll( '[data-studio], [data-studio-single]' ), initStudio );
+	window.wavexStudioInit = function ( scope ) {
+		Array.prototype.forEach.call( ( scope || document ).querySelectorAll( '[data-studio], [data-studio-single]' ), initStudio );
+	};
+	window.wavexStudioInit( document );
 }() );
