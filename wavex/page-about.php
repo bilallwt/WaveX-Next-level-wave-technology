@@ -18,8 +18,17 @@ while ( have_posts() ) :
 		'text'  => has_excerpt() ? get_the_excerpt() : __( 'A technology and digital services company helping businesses and organizations build, improve, launch and grow.', 'wavex' ),
 	) );
 	?>
-	<div class="wrap wrap--narrow">
-		<div class="entry-content"><?php the_content(); ?></div>
+	<div class="wrap">
+		<div class="svc-grid">
+			<div class="entry-content prose"><?php the_content(); ?></div>
+			<aside class="svc-card">
+				<p class="eyebrow"><?php esc_html_e( 'Get in touch', 'wavex' ); ?></p>
+				<h3><?php esc_html_e( 'Talk to the team', 'wavex' ); ?></h3>
+				<p><?php esc_html_e( 'Tell us about your project or ask us anything. A short message is enough to start.', 'wavex' ); ?></p>
+				<?php get_template_part( 'template-parts/components/contact-actions', null, array( 'topic' => __( 'WaveX Technology', 'wavex' ) ) ); ?>
+				<p class="svc-card__note"><a href="<?php echo esc_url( wavex_url( 'our-approach' ) ); ?>"><?php esc_html_e( 'How we work', 'wavex' ); ?></a></p>
+			</aside>
+		</div>
 	</div>
 	<?php
 endwhile;

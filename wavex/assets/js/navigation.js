@@ -82,4 +82,14 @@
 			closeAll();
 		}
 	} );
+
+	// Header shadow after scrolling.
+	var header = document.getElementById( 'site-header' );
+	if ( header ) {
+		var onScroll = function () {
+			header.classList.toggle( 'is-scrolled', window.scrollY > 8 );
+		};
+		window.addEventListener( 'scroll', onScroll, { passive: true } );
+		onScroll();
+	}
 }() );

@@ -1405,3 +1405,36 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -.025em; line-height: 1.12; }
 	.hero::before { bottom: 20px; }
 	.section--tint::before, .section--accent::before, .section--mix::before, .site-footer::before { height: 28px; top: -27px; }
 }
+
+/* ===== Layout polish ===== */
+.work-row { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.work-chip { display: flex; flex-direction: column; height: 100%; background: #fff; border: 1px solid var(--c-line); border-radius: 10px; overflow: hidden; text-decoration: none; color: var(--c-text); transition: border-color .2s, box-shadow .2s, transform .2s; }
+.work-chip:hover { border-color: var(--c-aqua); box-shadow: var(--shadow-md); transform: translateY(-3px); color: var(--c-text); }
+.work-chip__cover { display: grid; place-items: center; aspect-ratio: 16 / 10; background: var(--tint-primary-2); overflow: hidden; }
+.work-chip__cover img { width: 100%; height: 100%; object-fit: cover; }
+.work-chip__cover .work-card__mono { width: 56px; height: 56px; border-radius: 14px; font-size: 1.15rem; box-shadow: none; background: var(--c-brand); }
+.work-chip__body { display: grid; gap: 4px; padding: 14px 16px 16px; }
+.work-chip__name { font: 700 1rem/1.25 var(--font-head); color: var(--c-ink); }
+.section__head > div .section__title { max-width: 22em; }
+.why__item { box-shadow: var(--shadow-sm); }
+.why, .faq { align-items: start; }
+.why__intro, .faq__intro { position: sticky; top: 100px; }
+
+/* Header: shadow once the page is scrolled */
+.site-header { transition: box-shadow .2s; }
+.site-header.is-scrolled { box-shadow: 0 8px 22px -16px rgba(15, 31, 69, .35); }
+
+@media (max-width: 1024px) {
+	.work-row { grid-template-columns: repeat(3, 1fr); }
+	.why__intro, .faq__intro { position: static; }
+}
+@media (max-width: 600px) {
+	.work-row { grid-template-columns: 1fr 1fr; }
+}
+.group-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; margin-bottom: 22px; padding-bottom: 14px; border-bottom: 1px solid var(--c-line); }
+.group-head .section__title { margin: 0; }
+.group-head p { margin: 0; max-width: 34em; color: var(--c-muted); }
+.section--flush { padding-top: clamp(28px, 4vw, 52px); padding-bottom: clamp(8px, 2vw, 24px); }
+.wrap .svc-grid { align-items: start; }
+.wrap .svc-card { position: sticky; top: 130px; }
+@media (max-width: 1024px) { .wrap .svc-card { position: static; } }
