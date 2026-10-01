@@ -494,3 +494,59 @@ function wavex_primary_menu() {
 	 */
 	return apply_filters( 'wavex_primary_menu', $menu );
 }
+
+/**
+ * Icon, short description and optional thumbnail for a menu link path.
+ * Services and projects reuse their own data; other pages use a fixed map.
+ *
+ * @param string $path Link path (no leading slash).
+ * @return array{icon:string,desc:string,thumb:string}
+ */
+function wavex_link_meta( $path ) {
+	static $thumbs = array();
+
+	$path = trim( $path, '/' );
+	$meta = array( 'icon' => 'arrow', 'desc' => '', 'thumb' => '' );
+
+	if ( 0 === strpos( $path, 'services/' ) ) {
+		$services = wavex_services();
+		$slug     = substr( $path, 9 );
+		if ( isset( $services[ $slug ] ) ) {
+			$meta['icon'] = $services[ $slug ]['icon'];
+			$meta['desc'] = $services[ $slug ]['text'];
+		}
+		return $meta;
+	}
+
+	if ( 0 === strpos( $path, 'our-work/' ) ) {
+		$projects = wavex_projects();
+		$slug     = substr( $path, 9 );
+		if ( isset( $projects[ $slug ] ) ) {
+			$meta['icon'] = 'app' === $projects[ $slug ]['type'] ? 'mobile' : 'layout';
+			$meta['desc'] = 'app' === $projects[ $slug ]['type'] ? __( 'Mobile application project', 'wavex' ) : __( 'Website and platform project', 'wavex' );
+			if ( ! array_key_exists( $slug, $thumbs ) ) {
+				$post          = get_page_by_path( $slug, OBJECT, 'project' );
+				$thumbs[ $slug ] = $post ? (string) get_the_post_thumbnail_url( $post, 'thumbnail' ) : '';
+			}
+			$meta['thumb'] = $thumbs[ $slug ];
+		}
+		return $meta;
+	}
+
+	$map = array(
+		'services'          => array( 'grid', __( 'Browse every WaveX service', 'wavex' ) ),
+		'our-work'          => array( 'briefcase', __( 'See the projects we have built', 'wavex' ) ),
+		'about'             => array( 'users', __( 'Who WaveX Technology is', 'wavex' ) ),
+		'our-approach'      => array( 'compass', __( 'How we plan, build and support projects', 'wavex' ) ),
+		'why-wavex'         => array( 'check', __( 'What to expect when you work with us', 'wavex' ) ),
+		'faq'               => array( 'help', __( 'Answers to common questions', 'wavex' ) ),
+		'contact'           => array( 'mail', __( 'Get in touch with our team', 'wavex' ) ),
+		'free-consultation' => array( 'chat', __( 'Talk through your project with us', 'wavex' ) ),
+		'privacy-policy'    => array( 'shield', __( 'How we handle your information', 'wavex' ) ),
+	);
+	if ( isset( $map[ $path ] ) ) {
+		$meta['icon'] = $map[ $path ][0];
+		$meta['desc'] = $map[ $path ][1];
+	}
+	return $meta;
+}

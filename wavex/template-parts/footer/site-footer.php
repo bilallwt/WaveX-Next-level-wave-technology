@@ -26,6 +26,16 @@ $company = array(
 );
 ?>
 <footer class="site-footer">
+	<?php if ( ! is_front_page() ) : ?>
+	<div class="site-footer__cta">
+		<div>
+			<h2 class="site-footer__cta-title"><?php echo esc_html( wavex_opt( 'cta_title' ) ); ?></h2>
+			<p><?php echo esc_html( wavex_opt( 'cta_text' ) ); ?></p>
+		</div>
+		<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'light' ); ?>
+	</div>
+	<?php endif; ?>
+
 	<div class="site-footer__top">
 		<div class="site-footer__brand">
 			<a class="site-brand__link" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
@@ -77,6 +87,10 @@ $company = array(
 			&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>.
 			<?php esc_html_e( 'All rights reserved.', 'wavex' ); ?>
 		</p>
+		<a class="site-footer__top-link" href="#site-header">
+			<?php esc_html_e( 'Back to top', 'wavex' ); ?>
+			<?php echo wavex_icon( 'arrow', 'is-up' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</a>
 		<?php
 		if ( has_nav_menu( 'footer' ) ) {
 			wp_nav_menu( array(

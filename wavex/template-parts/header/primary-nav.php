@@ -1,6 +1,6 @@
 <?php
 /**
- * Primary navigation with mega menus. Items come from wavex_primary_menu().
+ * Primary navigation with card-style mega menus. Items come from wavex_primary_menu().
  *
  * @package WaveX
  */
@@ -44,17 +44,42 @@ $items = wavex_primary_menu();
 					</button>
 
 					<div class="mega" id="<?php echo esc_attr( $mega_id ); ?>">
-						<div class="mega__grid">
-							<?php foreach ( $item['columns'] as $column ) : ?>
-								<div class="mega__col">
-									<p class="mega__title"><?php echo esc_html( $column['title'] ); ?></p>
-									<ul class="mega__links">
-										<?php foreach ( $column['links'] as $link ) : ?>
-											<li><a href="<?php echo esc_url( wavex_url( $link[1] ) ); ?>"><?php echo esc_html( $link[0] ); ?></a></li>
-										<?php endforeach; ?>
-									</ul>
-								</div>
-							<?php endforeach; ?>
+						<div class="mega__panel">
+							<div class="mega__grid">
+								<?php foreach ( $item['columns'] as $column ) : ?>
+									<div class="mega__col">
+										<p class="mega__title"><?php echo esc_html( $column['title'] ); ?></p>
+										<ul class="mega__links">
+											<?php
+											foreach ( $column['links'] as $link ) :
+												$meta = wavex_link_meta( $link[1] );
+												?>
+												<li>
+													<a class="mega-card" href="<?php echo esc_url( wavex_url( $link[1] ) ); ?>">
+														<span class="mega-card__icon">
+															<?php if ( $meta['thumb'] ) : ?>
+																<img src="<?php echo esc_url( $meta['thumb'] ); ?>" alt="" width="44" height="44" loading="lazy">
+															<?php else : ?>
+																<?php echo wavex_icon( $meta['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+															<?php endif; ?>
+														</span>
+														<span class="mega-card__body">
+															<span class="mega-card__title"><?php echo esc_html( $link[0] ); ?></span>
+															<?php if ( $meta['desc'] ) : ?>
+																<span class="mega-card__desc"><?php echo esc_html( $meta['desc'] ); ?></span>
+															<?php endif; ?>
+														</span>
+													</a>
+												</li>
+											<?php endforeach; ?>
+										</ul>
+									</div>
+								<?php endforeach; ?>
+							</div>
+							<div class="mega__foot">
+								<p><strong><?php esc_html_e( 'Not sure where to start?', 'wavex' ); ?></strong> <?php esc_html_e( 'Tell us what you need and we will talk it through.', 'wavex' ); ?></p>
+								<a class="btn btn--primary btn--sm" href="<?php echo esc_url( wavex_url( 'free-consultation' ) ); ?>"><?php esc_html_e( 'Free Consultation', 'wavex' ); ?></a>
+							</div>
 						</div>
 					</div>
 				<?php endif; ?>

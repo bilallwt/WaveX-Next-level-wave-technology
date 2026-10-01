@@ -1,6 +1,6 @@
 <?php
 /**
- * Closing split section: heading + consultation links.
+ * Closing call-to-action band.
  *
  * @package WaveX
  */
@@ -9,16 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<section class="split" aria-labelledby="split-title">
-	<div class="split__art" aria-hidden="true">
-		<?php echo wavex_icon( 'mail', 'split__icon' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-	</div>
-	<div class="split__copy">
-		<h2 class="section__title" id="split-title"><?php echo esc_html( wavex_opt( 'cta_title' ) ); ?></h2>
+<section class="final-cta" aria-labelledby="final-title">
+	<div class="final-cta__inner">
+		<h2 class="final-cta__title" id="final-title"><?php echo esc_html( wavex_opt( 'cta_title' ) ); ?></h2>
 		<p><?php echo esc_html( wavex_opt( 'cta_text' ) ); ?></p>
 		<div class="hero__actions">
-			<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'primary' ); ?>
-			<?php wavex_button( __( 'Why WaveX', 'wavex' ), wavex_url( 'why-wavex' ), 'ghost' ); ?>
+			<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'light' ); ?>
+			<?php wavex_button( __( 'Contact Our Team', 'wavex' ), wavex_url( 'contact' ), 'outline' ); ?>
 		</div>
 	</div>
 </section>

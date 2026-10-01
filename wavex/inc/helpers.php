@@ -58,6 +58,13 @@ function wavex_icon( $name, $class = '' ) {
 		'chevron'  => '<path d="M6 9l6 6 6-6"/>',
 		'menu'     => '<path d="M4 7h16M4 12h16M4 17h16"/>',
 		'close'    => '<path d="M6 6l12 12M18 6L6 18"/>',
+		'grid'     => '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>',
+		'help'     => '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-.9.6-1.5 1.1-1.5 2.2M12 17.2h.01"/>',
+		'chat'     => '<path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9.5h8M8 12.5h5"/>',
+		'users'    => '<circle cx="9" cy="8.5" r="3.2"/><path d="M3 20c.4-3.4 3-5.5 6-5.5s5.6 2.1 6 5.5M16 5.5a3 3 0 010 6M18 14.8c1.8.7 3 2.4 3.2 5"/>',
+		'shield'   => '<path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+		'briefcase' => '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M3 13h18"/>',
+		'home'     => '<path d="M4 11l8-7 8 7v9h-5v-6H9v6H4v-9z"/>',
 		'mail'     => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
 	);
 
