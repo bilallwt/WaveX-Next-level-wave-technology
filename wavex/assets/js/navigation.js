@@ -51,6 +51,25 @@
 		} );
 	} );
 
+	nav.addEventListener( 'click', function ( e ) {
+		var btn = e.target.closest ? e.target.closest( '.mega__close' ) : null;
+		if ( ! btn ) {
+			return;
+		}
+		var item = btn.closest( '.has-mega' );
+		closeAll();
+		if ( item ) {
+			item.classList.add( 'is-suppressed' );
+			item.addEventListener( 'mouseleave', function once() {
+				item.classList.remove( 'is-suppressed' );
+				item.removeEventListener( 'mouseleave', once );
+			} );
+		}
+		if ( document.activeElement && document.activeElement.blur ) {
+			document.activeElement.blur();
+		}
+	} );
+
 	document.addEventListener( 'keydown', function ( e ) {
 		if ( e.key === 'Escape' ) {
 			closeAll();

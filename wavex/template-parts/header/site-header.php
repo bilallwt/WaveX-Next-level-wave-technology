@@ -9,6 +9,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
+<?php $wx = wavex_contact(); ?>
+<div class="topbar">
+	<div class="topbar__inner">
+		<p class="topbar__tag"><strong><?php esc_html_e( 'Technology built around your business', 'wavex' ); ?></strong> <span><?php esc_html_e( 'Websites. Apps. Digital growth.', 'wavex' ); ?></span></p>
+		<ul class="topbar__links">
+			<li><a href="<?php echo esc_url( wavex_url( 'contact' ) ); ?>"><?php esc_html_e( 'Contact our team', 'wavex' ); ?></a></li>
+			<?php if ( $wx['whatsapp'] ) : ?>
+				<li><a href="<?php echo esc_url( $wx['whatsapp'] ); ?>" target="_blank" rel="noopener"><?php echo wavex_icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'WhatsApp', 'wavex' ); ?></a></li>
+			<?php endif; ?>
+			<li><a href="<?php echo esc_url( $wx['email_url'] ); ?>"><?php echo wavex_icon( 'mail' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( $wx['email'] ? antispambot( $wx['email'] ) : __( 'Email us', 'wavex' ) ); ?></a></li>
+		</ul>
+	</div>
+</div>
 <header class="site-header" id="site-header">
 	<div class="site-header__inner">
 		<div class="site-brand">

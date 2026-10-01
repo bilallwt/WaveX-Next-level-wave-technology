@@ -487,6 +487,20 @@ function wavex_primary_menu() {
 		),
 	);
 
+	// Promo card shown at the right of each mega menu.
+	$promos = array(
+		__( 'Web & WordPress', 'wavex' ) => array( 'trend', __( 'Built around your business.', 'wavex' ), __( 'Tell us what you need and we will talk through the options with you.', 'wavex' ), __( 'Plan Your Website', 'wavex' ), 'free-consultation' ),
+		__( 'Mobile Apps', 'wavex' )     => array( 'mobile', __( 'From idea to app.', 'wavex' ), __( 'Shape your idea into a clear first version, then build on it.', 'wavex' ), __( 'Plan Your App', 'wavex' ), 'free-consultation' ),
+		__( 'SEO & Marketing', 'wavex' ) => array( 'search', __( 'Be easier to find.', 'wavex' ), __( 'Start with a review of how your website is found today.', 'wavex' ), __( 'Talk About SEO', 'wavex' ), 'free-consultation' ),
+		__( 'Our Work', 'wavex' )        => array( 'briefcase', __( 'Have a project like these?', 'wavex' ), __( 'Tell us about it and we will talk it through.', 'wavex' ), __( 'Start a Conversation', 'wavex' ), 'contact' ),
+		__( 'About', 'wavex' )           => array( 'users', __( 'Questions about WaveX?', 'wavex' ), __( 'We are happy to explain how we work and what we do.', 'wavex' ), __( 'Contact Our Team', 'wavex' ), 'contact' ),
+	);
+	foreach ( $menu as $i => $item ) {
+		if ( ! empty( $item['columns'] ) && isset( $promos[ $item['label'] ] ) ) {
+			$menu[ $i ]['promo'] = $promos[ $item['label'] ];
+		}
+	}
+
 	/**
 	 * Filter the header navigation structure.
 	 *

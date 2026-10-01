@@ -58,6 +58,7 @@ function wavex_icon( $name, $class = '' ) {
 		'chevron'  => '<path d="M6 9l6 6 6-6"/>',
 		'menu'     => '<path d="M4 7h16M4 12h16M4 17h16"/>',
 		'close'    => '<path d="M6 6l12 12M18 6L6 18"/>',
+		'trend'    => '<path d="M3 17l6-6 4 4 8-9M15 6h6v6"/>',
 		'grid'     => '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>',
 		'help'     => '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-.9.6-1.5 1.1-1.5 2.2M12 17.2h.01"/>',
 		'chat'     => '<path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9.5h8M8 12.5h5"/>',

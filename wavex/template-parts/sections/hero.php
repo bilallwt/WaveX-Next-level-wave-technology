@@ -1,6 +1,6 @@
 <?php
 /**
- * Home hero: centred headline, direct-contact actions, wide showcase image.
+ * Home hero: headline and direct-contact actions on the left, image on the right.
  *
  * @package WaveX
  */
@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Highlight the last two words of the heading with the brand gradient.
+// Highlight the last two words of the heading.
 $title_words = preg_split( '/\s+/', trim( wavex_opt( 'hero_title' ) ) );
 if ( count( $title_words ) >= 4 ) {
 	$tail  = implode( ' ', array_splice( $title_words, -2 ) );
@@ -20,7 +20,7 @@ if ( count( $title_words ) >= 4 ) {
 ?>
 <section class="hero" aria-labelledby="hero-title">
 	<div class="hero__copy">
-		<p class="eyebrow eyebrow--pill"><?php esc_html_e( 'Technology & digital services', 'wavex' ); ?></p>
+		<p class="eyebrow"><?php esc_html_e( 'Technology & digital services', 'wavex' ); ?></p>
 		<h1 class="hero__title" id="hero-title"><?php echo wp_kses( $title, array( 'span' => array( 'class' => array() ) ) ); ?></h1>
 		<p class="hero__text"><?php echo esc_html( wavex_opt( 'hero_text' ) ); ?></p>
 		<div class="hero__actions">
