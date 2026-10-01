@@ -29,7 +29,7 @@ $company = array(
 	<div class="site-footer__top">
 		<div class="site-footer__brand">
 			<a class="site-brand__link" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-				<svg class="site-brand__mark" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M3 7h22l-5 14h-4l-3-8-3 8H6L3 7z" fill="currentColor"/></svg>
+				<svg class="site-brand__mark" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true" focusable="false"><path d="M2 9c3-5 6-5 9 0s6 5 9 0 5-4 8-1" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M2 16c3-5 6-5 9 0s6 5 9 0 5-4 8-1" stroke="#19c3d6" stroke-width="3.2" stroke-linecap="round"/><path d="M2 23c3-5 6-5 9 0s6 5 9 0 5-4 8-1" stroke="currentColor" stroke-opacity=".45" stroke-width="3.2" stroke-linecap="round"/></svg>
 				<span class="site-brand__name"><?php bloginfo( 'name' ); ?></span>
 			</a>
 			<p><?php echo esc_html( wavex_opt( 'footer_text' ) ); ?></p>

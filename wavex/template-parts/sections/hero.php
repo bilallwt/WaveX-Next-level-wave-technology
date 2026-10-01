@@ -9,10 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Highlight the last two words of the heading.
+// Highlight the last word of the heading.
 $title_words = preg_split( '/\s+/', trim( wavex_opt( 'hero_title' ) ) );
 if ( count( $title_words ) >= 4 ) {
-	$tail  = implode( ' ', array_splice( $title_words, -2 ) );
+	$tail  = implode( ' ', array_splice( $title_words, -1 ) );
 	$title = esc_html( implode( ' ', $title_words ) ) . ' <span class="grad-text">' . esc_html( $tail ) . '</span>';
 } else {
 	$title = esc_html( wavex_opt( 'hero_title' ) );
