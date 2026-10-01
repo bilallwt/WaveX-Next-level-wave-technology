@@ -31,6 +31,6 @@ if ( count( $title_words ) >= 4 ) {
 	</div>
 
 	<div class="hero__visual">
-		<?php wavex_theme_image( 'hero_image', 'hero-photo.jpg', __( 'A laptop and a smartphone showing a website and an analytics dashboard', 'wavex' ), 'hero__image', array( 'fetchpriority' => 'high', 'width' => 1024, 'height' => 434 ) ); ?>
+		<?php wavex_visual( 'hero_image', 'visuals', 'hero', 'hero__vis', array( 'fetchpriority' => 'high' ) ); ?>
 	</div>
 </section>

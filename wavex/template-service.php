@@ -33,12 +33,12 @@ foreach ( wavex_studio_groups() as $gid => $group ) {
 		break;
 	}
 }
-$hero_images = array(
-	'web'    => array( 'img_web', 'img-web.jpg', __( 'A code editor next to a live dashboard preview', 'wavex' ) ),
-	'mobile' => array( 'img_mobile', 'img-mobile.jpg', __( 'Two smartphones showing app screens', 'wavex' ) ),
-	'seo'    => array( 'img_seo', 'img-seo.jpg', __( 'A search bar above a rising growth chart', 'wavex' ) ),
+$hero_scenes = array(
+	'web'    => array( 'img_web', 'web' ),
+	'mobile' => array( 'img_mobile', 'mobile' ),
+	'seo'    => array( 'img_seo', 'serp' ),
 );
-$hero_img = $hero_images[ $group_id ];
+$hero_vis = $hero_scenes[ $group_id ];
 
 // Four-step process (Support is merged with Launch).
 $steps = wavex_approach_steps();
@@ -64,7 +64,7 @@ while ( have_posts() ) :
 			</div>
 		</div>
 		<div class="svc-hero__visual">
-			<?php wavex_theme_image( $hero_img[0], $hero_img[1], $hero_img[2], 'svc-hero__img', array( 'fetchpriority' => 'high', 'width' => 1024, 'height' => 768 ) ); ?>
+			<?php wavex_visual( $hero_vis[0], 'studio', $hero_vis[1], 'svc-hero__vis', array( 'fetchpriority' => 'high' ) ); ?>
 		</div>
 	</header>
 

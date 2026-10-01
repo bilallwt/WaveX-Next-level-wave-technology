@@ -194,3 +194,32 @@ function wavex_blog_filters() {
 	}
 	echo '</ul>';
 }
+
+/**
+ * Output a section visual: the Customizer image if one is set, otherwise a live,
+ * code-drawn technology scene from template-parts/{dir}/scene-{name}.php (or visuals/{name}.php).
+ *
+ * @param string $key   Theme mod key holding an attachment ID.
+ * @param string $dir   "studio" or "visuals".
+ * @param string $name  Scene name.
+ * @param string $class Extra CSS class.
+ * @param array  $extra Extra image attributes when a Customizer image is used.
+ */
+function wavex_visual( $key, $dir, $name, $class = '', $extra = array() ) {
+	$id = (int) get_theme_mod( $key, 0 );
+
+	if ( $id && wp_get_attachment_image_url( $id, 'large' ) ) {
+		echo wp_get_attachment_image( $id, 'large', false, array_merge( array( 'class' => $class . ' vis-photo' ), $extra ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return;
+	}
+
+	printf( '<div class="vis %s" data-vis aria-hidden="true">', esc_attr( $class ) );
+	if ( 'studio' === $dir ) {
+		echo '<div class="stage vis__stage">';
+		get_template_part( 'template-parts/studio/scene', $name );
+		echo '</div>';
+	} else {
+		get_template_part( 'template-parts/visuals/' . $name );
+	}
+	echo '</div>';
+}

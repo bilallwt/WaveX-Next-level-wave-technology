@@ -6,7 +6,7 @@ On activation the theme creates the Home, Blog, core and service pages, the five
 
 ## After activating
 1. Appearance > Customize > **WaveX: Footer & Contact**: set the WhatsApp number (country code, digits only), contact email and phone. The WhatsApp buttons only appear once a number is set.
-2. Appearance > Customize > **WaveX: Home Page**: change hero text and replace the four illustrations with your own photos if you wish.
+2. Appearance > Customize > **WaveX: Home Page**: change hero text. The hero and section visuals are drawn in code (animated technology scenes, no image files). Upload an image in the same panel only if you prefer a photo.
 3. Add a Featured Image to each Project (Our Work) and write its details.
 4. Review the Privacy Notice text with your own legal advice before going live.
 
