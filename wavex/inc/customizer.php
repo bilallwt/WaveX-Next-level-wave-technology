@@ -80,8 +80,8 @@ function wavex_customize_register( $wp_customize ) {
 		'label'       => __( 'Hero image', 'wavex' ),
 		'description' => __( 'Optional. Leave empty to use the built-in illustration.', 'wavex' ),
 		'section'     => 'wavex_home',
-		'width'       => 900,
-		'height'      => 900,
+		'width'       => 1200,
+		'height'      => 520,
 	) ) );
 
 	$section_images = array(

@@ -114,17 +114,23 @@ function wavex_theme_image( $key, $file, $alt = '', $class = '', $extra = array(
 		return;
 	}
 
+	$width  = isset( $extra['width'] ) ? (int) $extra['width'] : 800;
+	$height = isset( $extra['height'] ) ? (int) $extra['height'] : 600;
+	unset( $extra['width'], $extra['height'] );
+
 	$attrs = '';
 	foreach ( $extra as $name => $value ) {
 		$attrs .= sprintf( ' %s="%s"', esc_attr( $name ), esc_attr( $value ) );
 	}
 
 	printf(
-		'<img class="%1$s" src="%2$s" width="800" height="600" alt="%3$s"%4$s>',
+		'<img class="%1$s" src="%2$s" width="%5$d" height="%6$d" alt="%3$s"%4$s>',
 		esc_attr( $class ),
 		esc_url( WAVEX_URI . '/assets/img/' . $file ),
 		esc_attr( $alt ),
-		$attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+		$attrs, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+		$width,
+		$height
 	);
 }
 

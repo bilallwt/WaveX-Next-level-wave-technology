@@ -35,12 +35,12 @@ function wavex_enqueue_assets() {
 	);
 
 	if ( is_front_page() ) {
-		$magic = WAVEX_DIR . '/assets/js/magic.js';
+		$studio = WAVEX_DIR . '/assets/js/studio.js';
 		wp_enqueue_script(
-			'wavex-magic',
-			WAVEX_URI . '/assets/js/magic.js',
+			'wavex-studio',
+			WAVEX_URI . '/assets/js/studio.js',
 			array(),
-			file_exists( $magic ) ? filemtime( $magic ) : WAVEX_VERSION,
+			file_exists( $studio ) ? filemtime( $studio ) : WAVEX_VERSION,
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',

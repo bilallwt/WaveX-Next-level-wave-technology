@@ -1,6 +1,6 @@
 <?php
 /**
- * Home hero.
+ * Home hero: centred headline, direct-contact actions, wide showcase image.
  *
  * @package WaveX
  */
@@ -9,30 +9,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Highlight the last two words of the heading with the brand gradient.
+$title_words = preg_split( '/\s+/', trim( wavex_opt( 'hero_title' ) ) );
+if ( count( $title_words ) >= 4 ) {
+	$tail  = implode( ' ', array_splice( $title_words, -2 ) );
+	$title = esc_html( implode( ' ', $title_words ) ) . ' <span class="grad-text">' . esc_html( $tail ) . '</span>';
+} else {
+	$title = esc_html( wavex_opt( 'hero_title' ) );
+}
 ?>
 <section class="hero" aria-labelledby="hero-title">
 	<div class="hero__copy">
 		<p class="eyebrow eyebrow--pill"><?php esc_html_e( 'Technology & digital services', 'wavex' ); ?></p>
-		<h1 class="hero__title" id="hero-title"><?php echo esc_html( wavex_opt( 'hero_title' ) ); ?></h1>
+		<h1 class="hero__title" id="hero-title"><?php echo wp_kses( $title, array( 'span' => array( 'class' => array() ) ) ); ?></h1>
 		<p class="hero__text"><?php echo esc_html( wavex_opt( 'hero_text' ) ); ?></p>
 		<div class="hero__actions">
 			<?php get_template_part( 'template-parts/components/contact-actions' ); ?>
 			<?php wavex_button( wavex_opt( 'hero_cta_label' ), wavex_url( 'free-consultation' ), 'ghost' ); ?>
 		</div>
 		<p class="hero__note"><?php esc_html_e( 'Send us a message with your idea. No forms to fill in first.', 'wavex' ); ?></p>
-		<ul class="chips" aria-label="<?php esc_attr_e( 'Service areas', 'wavex' ); ?>">
-			<li><a href="<?php echo esc_url( wavex_url( 'services#web-wordpress' ) ); ?>"><?php esc_html_e( 'Web & WordPress', 'wavex' ); ?></a></li>
-			<li><a href="<?php echo esc_url( wavex_url( 'services#mobile-apps' ) ); ?>"><?php esc_html_e( 'Mobile Apps', 'wavex' ); ?></a></li>
-			<li><a href="<?php echo esc_url( wavex_url( 'services#seo-marketing' ) ); ?>"><?php esc_html_e( 'SEO & Marketing', 'wavex' ); ?></a></li>
-		</ul>
 	</div>
 
 	<div class="hero__visual">
-		<span class="hero__blob" aria-hidden="true"></span>
-		<span class="hero__panel" aria-hidden="true"></span>
-		<?php wavex_theme_image( 'hero_image', 'hero-art.svg', __( 'Illustration of a website and a mobile app', 'wavex' ), 'hero__image', array( 'fetchpriority' => 'high' ) ); ?>
-		<span class="float float--a"><?php echo wavex_icon( 'code' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Web', 'wavex' ); ?></span>
-		<span class="float float--b"><?php echo wavex_icon( 'mobile' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Mobile', 'wavex' ); ?></span>
-		<span class="float float--c"><?php echo wavex_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'SEO', 'wavex' ); ?></span>
+		<?php wavex_theme_image( 'hero_image', 'hero-art.svg', __( 'Illustration of a website, a mobile app and an analytics card', 'wavex' ), 'hero__image', array( 'fetchpriority' => 'high', 'width' => 1200, 'height' => 520 ) ); ?>
+		<span class="float float--a"><?php echo wavex_icon( 'code' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Web & WordPress', 'wavex' ); ?></span>
+		<span class="float float--b"><?php echo wavex_icon( 'mobile' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Mobile Apps', 'wavex' ); ?></span>
+		<span class="float float--c"><?php echo wavex_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'SEO & Marketing', 'wavex' ); ?></span>
 	</div>
 </section>

@@ -15,6 +15,7 @@ define( 'WAVEX_URI', get_template_directory_uri() );
 
 require_once WAVEX_DIR . '/inc/helpers.php';
 require_once WAVEX_DIR . '/inc/data.php';
+require_once WAVEX_DIR . '/inc/studio-data.php';
 require_once WAVEX_DIR . '/inc/setup.php';
 require_once WAVEX_DIR . '/inc/enqueue.php';
 require_once WAVEX_DIR . '/inc/post-types.php';

@@ -13,8 +13,7 @@ get_header();
 
 get_template_part( 'template-parts/sections/hero' );
 get_template_part( 'template-parts/sections/trust' );
-get_template_part( 'template-parts/sections/services-grid' );
-get_template_part( 'template-parts/sections/magic' );
+get_template_part( 'template-parts/sections/studio' );
 get_template_part( 'template-parts/sections/features' );
 get_template_part( 'template-parts/sections/work' );
 get_template_part( 'template-parts/sections/approach' );
