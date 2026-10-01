@@ -32,9 +32,10 @@ $current = is_tax() ? get_queried_object_id() : 0;
 	<?php if ( have_posts() ) : ?>
 		<div class="pj-grid pj-grid--archive">
 			<?php
+			$n = 0;
 			while ( have_posts() ) :
 				the_post();
-				get_template_part( 'template-parts/components/project-card', null, array( 'size' => 'md' ) );
+				get_template_part( 'template-parts/components/project-card', null, array( 'size' => 'md', 'idx' => $n++ ) );
 			endwhile;
 			?>
 		</div>

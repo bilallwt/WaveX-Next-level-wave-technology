@@ -34,7 +34,7 @@ if ( ! $projects->have_posts() ) {
 		$n = 0;
 		while ( $projects->have_posts() ) :
 			$projects->the_post();
-			get_template_part( 'template-parts/components/project-card', null, array( 'size' => ( $n < 2 ) ? 'lg' : 'md' ) );
+			get_template_part( 'template-parts/components/project-card', null, array( 'size' => ( $n < 2 ) ? 'lg' : 'md', 'idx' => $n ) );
 			++$n;
 		endwhile;
 		wp_reset_postdata();

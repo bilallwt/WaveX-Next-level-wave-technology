@@ -14,11 +14,7 @@ $size  = isset( $args['size'] ) ? $args['size'] : 'md';
 $types = get_the_terms( get_the_ID(), 'project_type' );
 $type  = ( $types && ! is_wp_error( $types ) ) ? $types[0]->name : '';
 $is_app = ( false !== stripos( $type, 'mobile' ) || false !== stripos( $type, 'app' ) );
-$icons  = $is_app ? array( 'mobile', 'chat', 'rocket' ) : array( 'layout', 'link', 'code' );
-$items  = array();
-foreach ( $icons as $ic ) {
-	$items[] = array( 'icon' => $ic, 'label' => '' );
-}
+$idx = isset( $args['idx'] ) ? (int) $args['idx'] : 0;
 $mono = mb_strtoupper( mb_substr( get_the_title(), 0, 2 ) );
 ?>
 <a class="pj pj--<?php echo esc_attr( $size ); ?> pj--<?php echo $is_app ? 'app' : 'web'; ?>" href="<?php the_permalink(); ?>">
@@ -26,7 +22,7 @@ $mono = mb_strtoupper( mb_substr( get_the_title(), 0, 2 ) );
 		<?php if ( has_post_thumbnail() ) : ?>
 			<?php the_post_thumbnail( 'wavex-card', array( 'loading' => 'lazy' ) ); ?>
 		<?php else : ?>
-			<?php wavex_ring( $items, '<span class="pj__mono">' . esc_html( $mono ) . '</span>', 'rg--pj' ); ?>
+			<?php get_template_part( 'template-parts/components/project-art', null, array( 'idx' => $is_app ? array( 1, 3 )[ $idx % 2 ] : array( 0, 2, 4 )[ $idx % 3 ], 'mono' => $mono ) ); ?>
 		<?php endif; ?>
 	</span>
 	<span class="pj__body">
