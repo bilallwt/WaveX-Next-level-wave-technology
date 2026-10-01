@@ -65,6 +65,8 @@ function wavex_icon( $name, $class = '' ) {
 		'shield'   => '<path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
 		'briefcase' => '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M3 13h18"/>',
 		'home'     => '<path d="M4 11l8-7 8 7v9h-5v-6H9v6H4v-9z"/>',
+		'whatsapp' => '<path d="M3.5 20.5l1.4-4.6A8.6 8.6 0 1 1 8.2 19L3.5 20.5z"/><path d="M9 8.8c.2 2.4 2.7 5 5.3 5.4l1.3-1.3-2-1-.9.8c-.9-.4-1.7-1.2-2.1-2.1l.8-.9-1-2L9 8.8z"/>',
+		'play'     => '<path d="M8 5l11 7-11 7V5z"/>',
 		'mail'     => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
 	);
 
@@ -123,5 +125,28 @@ function wavex_theme_image( $key, $file, $alt = '', $class = '', $extra = array(
 		esc_url( WAVEX_URI . '/assets/img/' . $file ),
 		esc_attr( $alt ),
 		$attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+	);
+}
+
+/**
+ * Direct contact details and ready-made links (WhatsApp / email).
+ * WhatsApp is only offered when a number is set in the Customizer;
+ * email falls back to the Contact page when no address is set.
+ *
+ * @param string $topic Optional topic added to the prefilled message.
+ * @return array{whatsapp:string,whatsapp_label:string,email:string,email_url:string,phone:string}
+ */
+function wavex_contact( $topic = '' ) {
+	$digits  = preg_replace( '/\D/', '', wavex_opt( 'whatsapp' ) );
+	$email   = sanitize_email( wavex_opt( 'contact_email' ) );
+	$subject = $topic ? sprintf( /* translators: %s: topic. */ __( 'Enquiry: %s', 'wavex' ), $topic ) : __( 'Project enquiry', 'wavex' );
+	$message = $topic ? sprintf( /* translators: %s: topic. */ __( 'Hello WaveX Technology, I would like to talk about %s.', 'wavex' ), $topic ) : __( 'Hello WaveX Technology, I would like to talk about a project.', 'wavex' );
+
+	return array(
+		'whatsapp'       => $digits ? 'https://wa.me/' . $digits . '?text=' . rawurlencode( $message ) : '',
+		'whatsapp_label' => wavex_opt( 'whatsapp' ),
+		'email'          => $email,
+		'email_url'      => $email ? 'mailto:' . $email . '?subject=' . rawurlencode( $subject ) : wavex_url( 'contact' ),
+		'phone'          => wavex_opt( 'contact_phone' ),
 	);
 }

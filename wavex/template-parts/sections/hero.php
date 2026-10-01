@@ -16,9 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<h1 class="hero__title" id="hero-title"><?php echo esc_html( wavex_opt( 'hero_title' ) ); ?></h1>
 		<p class="hero__text"><?php echo esc_html( wavex_opt( 'hero_text' ) ); ?></p>
 		<div class="hero__actions">
-			<?php wavex_button( wavex_opt( 'hero_cta_label' ), wavex_url( 'free-consultation' ), 'primary' ); ?>
-			<?php wavex_button( __( 'Our Services', 'wavex' ), wavex_url( 'services' ), 'ghost' ); ?>
+			<?php get_template_part( 'template-parts/components/contact-actions' ); ?>
+			<?php wavex_button( wavex_opt( 'hero_cta_label' ), wavex_url( 'free-consultation' ), 'ghost' ); ?>
 		</div>
+		<p class="hero__note"><?php esc_html_e( 'Send us a message with your idea. No forms to fill in first.', 'wavex' ); ?></p>
 		<ul class="chips" aria-label="<?php esc_attr_e( 'Service areas', 'wavex' ); ?>">
 			<li><a href="<?php echo esc_url( wavex_url( 'services#web-wordpress' ) ); ?>"><?php esc_html_e( 'Web & WordPress', 'wavex' ); ?></a></li>
 			<li><a href="<?php echo esc_url( wavex_url( 'services#mobile-apps' ) ); ?>"><?php esc_html_e( 'Mobile Apps', 'wavex' ); ?></a></li>

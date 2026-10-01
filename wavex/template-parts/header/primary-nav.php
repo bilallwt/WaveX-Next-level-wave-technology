@@ -85,7 +85,7 @@ $items = wavex_primary_menu();
 							</div>
 							<div class="mega__foot">
 								<p><strong><?php esc_html_e( 'Not sure where to start?', 'wavex' ); ?></strong> <?php esc_html_e( 'Tell us what you need and we will talk it through.', 'wavex' ); ?></p>
-								<a class="btn btn--primary btn--sm" href="<?php echo esc_url( wavex_url( 'free-consultation' ) ); ?>"><?php esc_html_e( 'Free Consultation', 'wavex' ); ?></a>
+								<?php get_template_part( 'template-parts/components/contact-actions', null, array( 'size' => 'sm', 'tone' => 'light' ) ); ?>
 							</div>
 						</div>
 					</div>

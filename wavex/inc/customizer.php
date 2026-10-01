@@ -24,6 +24,7 @@ function wavex_defaults() {
 		'footer_text'    => __( 'Technology and digital services: web, WordPress, mobile apps, custom software, SEO and digital marketing.', 'wavex' ),
 		'contact_email'  => '',
 		'contact_phone'  => '',
+		'whatsapp'       => '',
 	);
 }
 
@@ -111,6 +112,7 @@ function wavex_customize_register( $wp_customize ) {
 		'footer_text'   => array( __( 'Footer description', 'wavex' ), 'textarea', 'sanitize_textarea_field' ),
 		'contact_email' => array( __( 'Contact email', 'wavex' ), 'text', 'sanitize_email' ),
 		'contact_phone' => array( __( 'Contact phone', 'wavex' ), 'text', 'sanitize_text_field' ),
+		'whatsapp'      => array( __( 'WhatsApp number (country code, digits only)', 'wavex' ), 'text', 'wavex_sanitize_phone' ),
 	);
 
 	foreach ( $footer_fields as $key => $field ) {
@@ -126,3 +128,13 @@ function wavex_customize_register( $wp_customize ) {
 	}
 }
 add_action( 'customize_register', 'wavex_customize_register' );
+
+/**
+ * Keep digits and a leading plus only.
+ *
+ * @param string $value Raw value.
+ * @return string
+ */
+function wavex_sanitize_phone( $value ) {
+	return preg_replace( '/[^0-9+]/', '', (string) $value );
+}

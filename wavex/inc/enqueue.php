@@ -34,6 +34,20 @@ function wavex_enqueue_assets() {
 		)
 	);
 
+	if ( is_front_page() ) {
+		$magic = WAVEX_DIR . '/assets/js/magic.js';
+		wp_enqueue_script(
+			'wavex-magic',
+			WAVEX_URI . '/assets/js/magic.js',
+			array(),
+			file_exists( $magic ) ? filemtime( $magic ) : WAVEX_VERSION,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+	}
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}

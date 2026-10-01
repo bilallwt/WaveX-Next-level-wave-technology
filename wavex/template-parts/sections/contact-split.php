@@ -14,8 +14,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<h2 class="final-cta__title" id="final-title"><?php echo esc_html( wavex_opt( 'cta_title' ) ); ?></h2>
 		<p><?php echo esc_html( wavex_opt( 'cta_text' ) ); ?></p>
 		<div class="hero__actions">
-			<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'light' ); ?>
-			<?php wavex_button( __( 'Contact Our Team', 'wavex' ), wavex_url( 'contact' ), 'outline' ); ?>
+			<?php get_template_part( 'template-parts/components/contact-actions', null, array( 'tone' => 'light' ) ); ?>
+			<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'outline' ); ?>
 		</div>
+		<?php $c = wavex_contact(); ?>
+		<?php if ( $c['email'] || $c['whatsapp_label'] ) : ?>
+			<p class="final-cta__direct">
+				<?php if ( $c['email'] ) : ?><span><?php echo esc_html( antispambot( $c['email'] ) ); ?></span><?php endif; ?>
+				<?php if ( $c['whatsapp_label'] ) : ?><span><?php echo esc_html( $c['whatsapp_label'] ); ?></span><?php endif; ?>
+			</p>
+		<?php endif; ?>
 	</div>
 </section>
