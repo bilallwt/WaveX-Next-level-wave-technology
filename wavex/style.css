@@ -1,0 +1,15 @@
+/*
+Theme Name: WaveX Technology
+Theme URI: https://lastwavetechnology.com/
+Author: WaveX Technology
+Description: Custom standalone theme for WaveX Technology. No page builder required: header, mega menus, footer, home page and templates are all controlled by the theme. Content is managed with native WordPress pages, posts and the Projects post type.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.6
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: wavex
+*/
+
+/* All theme styles live in assets/css/main.css (enqueued in inc/enqueue.php). */
