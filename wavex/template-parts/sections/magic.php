@@ -140,7 +140,7 @@ $scenes = array(
 					</a>
 				</div>
 
-				<div class="stage" aria-hidden="true">
+				<div class="stage"<?php echo ( 'wordpress' === $key ) ? '' : ' aria-hidden="true"'; ?>>
 					<?php get_template_part( 'template-parts/magic/scene', $key ); ?>
 				</div>
 			</div>

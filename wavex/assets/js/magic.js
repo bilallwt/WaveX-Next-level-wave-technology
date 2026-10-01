@@ -32,6 +32,213 @@
 		} );
 	}
 
+
+	/* ---------- WordPress drag-and-drop demo ---------- */
+	function initWp( demo ) {
+		var stage = demo.parentNode;
+		var canvas = demo.querySelector( '[data-wp-canvas]' );
+		var ghost = demo.querySelector( '[data-wp-ghost]' );
+		var cursor = demo.querySelector( '[data-wp-cursor]' );
+		var done = demo.querySelector( '[data-wp-done]' );
+		var chips = demo.querySelectorAll( '[data-block]' );
+		var timers = [];
+		var dragging = null;
+		var moved = false;
+		var MAX = 6;
+
+		function later( fn, ms ) {
+			timers.push( window.setTimeout( fn, ms ) );
+		}
+
+		function cancelAuto() {
+			timers.forEach( window.clearTimeout );
+			timers = [];
+			ghost.hidden = true;
+			cursor.hidden = true;
+		}
+
+		function html( type ) {
+			var map = {
+				heading: '<i class="mk-line" style="--w:55%;height:14px;background:#0f1b4d"></i>',
+				image: '<i class="mk-ph"></i>',
+				text: '<i class="mk-line" style="--w:92%"></i><i class="mk-line" style="--w:78%"></i><i class="mk-line" style="--w:60%"></i>',
+				button: '<i class="mk-pill"></i>',
+				gallery: '<i class="mk-gal"><b></b><b></b><b></b></i>'
+			};
+			return map[ type ] || '';
+		}
+
+		function addBlock( type, index ) {
+			var empty = canvas.querySelector( '.mk-wpe__empty' );
+			if ( empty ) {
+				empty.remove();
+			}
+			var blocks = canvas.querySelectorAll( '.mk-blk' );
+			if ( blocks.length >= MAX ) {
+				return;
+			}
+			var el = document.createElement( 'div' );
+			el.className = 'mk-blk mk-blk--' + type;
+			el.innerHTML = html( type );
+			if ( typeof index === 'number' && blocks[ index ] ) {
+				canvas.insertBefore( el, blocks[ index ] );
+			} else {
+				canvas.appendChild( el );
+			}
+			done.hidden = true;
+		}
+
+		function reset() {
+			cancelAuto();
+			canvas.innerHTML = '<p class="mk-wpe__empty">' + canvas.getAttribute( 'data-empty' ) + '</p>';
+			done.hidden = true;
+		}
+		canvas.setAttribute( 'data-empty', canvas.textContent.trim() );
+
+		function publish() {
+			if ( canvas.querySelector( '.mk-blk' ) ) {
+				done.hidden = false;
+			}
+		}
+
+		function rel( x, y ) {
+			var r = stage.getBoundingClientRect();
+			return { x: x - r.left, y: y - r.top };
+		}
+
+		function place( el, x, y, animate ) {
+			el.style.transition = animate ? 'transform .9s cubic-bezier(.6,.05,.3,1)' : 'none';
+			el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+		}
+
+		function autoStep( types, n ) {
+			if ( n >= types.length ) {
+				later( publish, 700 );
+				return;
+			}
+			var chip = demo.querySelector( '[data-block="' + types[ n ] + '"]' );
+			var cr = chip.getBoundingClientRect();
+			var from = rel( cr.left + cr.width / 2, cr.top + cr.height / 2 );
+			var kr = canvas.getBoundingClientRect();
+			var count = canvas.querySelectorAll( '.mk-blk' ).length;
+			var to = rel( kr.left + kr.width / 2, kr.top + 50 + count * 54 );
+
+			ghost.textContent = chip.textContent;
+			ghost.hidden = false;
+			cursor.hidden = false;
+			place( ghost, from.x - 40, from.y - 16, false );
+			place( cursor, from.x, from.y, false );
+			void ghost.offsetWidth;
+			later( function () {
+				place( ghost, to.x - 40, to.y - 16, true );
+				place( cursor, to.x, to.y, true );
+			}, 250 );
+			later( function () {
+				addBlock( types[ n ] );
+				ghost.hidden = true;
+			}, 1250 );
+			later( function () {
+				cursor.hidden = true;
+				autoStep( types, n + 1 );
+			}, 1750 );
+		}
+
+		function runAuto() {
+			reset();
+			if ( reduce ) {
+				[ 'heading', 'image', 'button' ].forEach( function ( t ) { addBlock( t ); } );
+				publish();
+				return;
+			}
+			later( function () {
+				autoStep( [ 'heading', 'image', 'text', 'button' ], 0 );
+			}, 500 );
+		}
+
+		// Manual drag and drop (mouse, touch, pen).
+		function indexAt( y ) {
+			var blocks = canvas.querySelectorAll( '.mk-blk' );
+			for ( var i = 0; i < blocks.length; i++ ) {
+				var r = blocks[ i ].getBoundingClientRect();
+				if ( y < r.top + r.height / 2 ) {
+					return i;
+				}
+			}
+			return blocks.length;
+		}
+
+		function overCanvas( x, y ) {
+			var r = canvas.getBoundingClientRect();
+			return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+		}
+
+		function onMove( e ) {
+			if ( ! dragging ) {
+				return;
+			}
+			if ( ! moved && Math.abs( e.clientX - dragging.x ) + Math.abs( e.clientY - dragging.y ) < 6 ) {
+				return;
+			}
+			moved = true;
+			var p = rel( e.clientX, e.clientY );
+			ghost.hidden = false;
+			ghost.textContent = dragging.label;
+			place( ghost, p.x - 40, p.y - 16, false );
+			canvas.classList.toggle( 'is-over', overCanvas( e.clientX, e.clientY ) );
+		}
+
+		function onUp( e ) {
+			document.removeEventListener( 'pointermove', onMove );
+			document.removeEventListener( 'pointerup', onUp );
+			document.removeEventListener( 'pointercancel', onUp );
+			canvas.classList.remove( 'is-over' );
+			ghost.hidden = true;
+			if ( dragging && moved && overCanvas( e.clientX, e.clientY ) ) {
+				addBlock( dragging.type, indexAt( e.clientY ) );
+			}
+			dragging = null;
+		}
+
+		chips.forEach( function ( chip ) {
+			chip.addEventListener( 'pointerdown', function ( e ) {
+				if ( e.button !== 0 ) {
+					return;
+				}
+				cancelAuto();
+				moved = false;
+				dragging = { type: chip.getAttribute( 'data-block' ), label: chip.textContent, x: e.clientX, y: e.clientY };
+				document.addEventListener( 'pointermove', onMove );
+				document.addEventListener( 'pointerup', onUp );
+				document.addEventListener( 'pointercancel', onUp );
+			} );
+			chip.addEventListener( 'click', function () {
+				if ( moved ) {
+					moved = false;
+					return;
+				}
+				cancelAuto();
+				addBlock( chip.getAttribute( 'data-block' ) );
+			} );
+		} );
+
+		demo.querySelector( '[data-wp-reset]' ).addEventListener( 'click', reset );
+		demo.querySelector( '[data-wp-publish]' ).addEventListener( 'click', function () {
+			cancelAuto();
+			publish();
+		} );
+
+		return { run: runAuto, stop: cancelAuto };
+	}
+
+	var wpApi = null;
+	panels.forEach( function ( panel ) {
+		var demo = panel.querySelector( '[data-wp-demo]' );
+		if ( demo ) {
+			wpApi = initWp( demo );
+			panel._wp = wpApi;
+		}
+	} );
+
 	function stopTyping() {
 		if ( typer ) {
 			window.clearTimeout( typer );
@@ -87,7 +294,15 @@
 		if ( focus ) {
 			tabs[ current ].focus();
 		}
+		panels.forEach( function ( p ) {
+			if ( p._wp && p !== panels[ current ] ) {
+				p._wp.stop();
+			}
+		} );
 		restart( panels[ current ] );
+		if ( panels[ current ]._wp ) {
+			panels[ current ]._wp.run();
+		}
 	}
 
 	function startAuto() {
