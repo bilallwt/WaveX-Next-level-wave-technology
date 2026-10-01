@@ -1158,3 +1158,7 @@ ul, ol { margin: 0; padding: 0; }
 @keyframes stage-sweep { to { transform: translateX(130%); } }
 @keyframes mk-pop { from { opacity: 0; transform: translateY(14px) scale(.9); filter: brightness(1.5) drop-shadow(0 0 14px rgba(94, 224, 240, .95)); } 60% { filter: brightness(1.15) drop-shadow(0 0 10px rgba(94, 224, 240, .5)); } to { opacity: 1; transform: none; filter: none; } }
 @media (prefers-reduced-motion: reduce) { .fx-spark, .stage::after { display: none; } }
+
+/* Photo-style images: keep a uniform shape whatever the source ratio */
+.hero__image { aspect-ratio: 1200 / 520; object-fit: cover; }
+.feature__img { aspect-ratio: 4 / 3; object-fit: cover; }

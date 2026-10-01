@@ -31,9 +31,6 @@ if ( count( $title_words ) >= 4 ) {
 	</div>
 
 	<div class="hero__visual">
-		<?php wavex_theme_image( 'hero_image', 'hero-art.svg', __( 'Illustration of a website, a mobile app and an analytics card', 'wavex' ), 'hero__image', array( 'fetchpriority' => 'high', 'width' => 1200, 'height' => 520 ) ); ?>
-		<span class="float float--a"><?php echo wavex_icon( 'code' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Web & WordPress', 'wavex' ); ?></span>
-		<span class="float float--b"><?php echo wavex_icon( 'mobile' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'Mobile Apps', 'wavex' ); ?></span>
-		<span class="float float--c"><?php echo wavex_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php esc_html_e( 'SEO & Marketing', 'wavex' ); ?></span>
+		<?php wavex_theme_image( 'hero_image', 'hero-photo.jpg', __( 'A laptop and a smartphone showing a website and an analytics dashboard', 'wavex' ), 'hero__image', array( 'fetchpriority' => 'high', 'width' => 1024, 'height' => 434 ) ); ?>
 	</div>
 </section>

@@ -78,7 +78,7 @@ function wavex_customize_register( $wp_customize ) {
 	) );
 	$wp_customize->add_control( new WP_Customize_Cropped_Image_Control( $wp_customize, 'hero_image', array(
 		'label'       => __( 'Hero image', 'wavex' ),
-		'description' => __( 'Optional. Leave empty to use the built-in illustration.', 'wavex' ),
+		'description' => __( 'Optional. Leave empty to use the built-in image.', 'wavex' ),
 		'section'     => 'wavex_home',
 		'width'       => 1200,
 		'height'      => 520,
@@ -96,7 +96,7 @@ function wavex_customize_register( $wp_customize ) {
 		) );
 		$wp_customize->add_control( new WP_Customize_Cropped_Image_Control( $wp_customize, $key, array(
 			'label'       => $label,
-			'description' => __( 'Optional. Leave empty to use the built-in illustration.', 'wavex' ),
+			'description' => __( 'Optional. Leave empty to use the built-in image.', 'wavex' ),
 			'section'     => 'wavex_home',
 			'width'       => 800,
 			'height'      => 600,
