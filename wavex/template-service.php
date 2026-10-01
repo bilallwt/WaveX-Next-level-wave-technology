@@ -52,6 +52,7 @@ $four  = array(
 while ( have_posts() ) :
 	the_post();
 	?>
+	<div class="gtheme gtheme--<?php echo esc_attr( $group_id ); ?>">
 	<header class="svc-hero">
 		<div class="svc-hero__copy">
 			<?php get_template_part( 'template-parts/components/breadcrumbs' ); ?>
@@ -192,6 +193,7 @@ while ( have_posts() ) :
 			</div>
 		</section>
 	<?php endif; ?>
+	</div>
 	<?php
 endwhile;
 

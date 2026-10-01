@@ -25,14 +25,14 @@ $groups   = wavex_studio_groups();
 			<div class="studio__nav" role="tablist" aria-orientation="vertical" aria-label="<?php esc_attr_e( 'Services', 'wavex' ); ?>">
 				<?php
 				$first = true;
-				foreach ( $groups as $group ) :
+				foreach ( $groups as $gkey => $group ) :
 					?>
-					<p class="studio__group"><?php echo esc_html( $group['label'] ); ?></p>
+					<p class="studio__group studio__group--<?php echo esc_attr( $gkey ); ?>"><?php echo esc_html( $group['label'] ); ?></p>
 					<?php
 					foreach ( $group['services'] as $slug ) :
 						$service = $services[ $slug ];
 						?>
-						<button class="studio__tab" type="button" role="tab" id="tab-<?php echo esc_attr( $slug ); ?>" aria-controls="panel-<?php echo esc_attr( $slug ); ?>" aria-selected="<?php echo $first ? 'true' : 'false'; ?>" tabindex="<?php echo $first ? '0' : '-1'; ?>">
+						<button class="studio__tab studio__tab--<?php echo esc_attr( $gkey ); ?>" type="button" role="tab" id="tab-<?php echo esc_attr( $slug ); ?>" aria-controls="panel-<?php echo esc_attr( $slug ); ?>" aria-selected="<?php echo $first ? 'true' : 'false'; ?>" tabindex="<?php echo $first ? '0' : '-1'; ?>">
 							<span class="studio__tab-icon"><?php echo wavex_icon( $service['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 							<span class="studio__tab-label"><?php echo esc_html( $service['title'] ); ?></span>
 						</button>
