@@ -228,8 +228,8 @@
 		return s.replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
 	}
 
-	// Small highlighter that also works on partially typed text.
-	function highlight( text ) {
+	// Small highlighter for one line (also works on partially typed text).
+	function highlightLine( text ) {
 		var re = /(\/\/.*|\/\*[\s\S]*?(?:\*\/|$)|&lt;!--[\s\S]*?(?:--&gt;|$))|("[^"\n]*"?|'[^'\n]*'?)|\b(const|function|return|await|if|export|default|new)\b|(&lt;\/?[a-zA-Z][\w-]*)/g;
 		return esc( text ).replace( re, function ( m, c, s, k ) {
 			if ( c ) { return '<span class="tk-c">' + m + '</span>'; }
@@ -239,11 +239,90 @@
 		} );
 	}
 
+	// Whole code block as one block-level span per line; the line being typed glows.
+	function renderCode( text, typing ) {
+		var lines = text.split( '\n' );
+		return lines.map( function ( line, i ) {
+			var cur = typing && i === lines.length - 1;
+			return '<span class="cl' + ( cur ? ' is-cur' : '' ) + '">' + ( highlightLine( line ) || '&nbsp;' ) + ( cur ? '<span class="studio__caret"></span>' : '' ) + '</span>';
+		} ).join( '' );
+	}
+
 	function stopTyping() {
 		if ( typer ) {
 			window.clearTimeout( typer );
 			typer = null;
 		}
+	}
+
+	var SPEED = 20; // ms per typed character.
+	var FLIGHT = 0.75; // seconds a spark takes to reach the stage.
+	var CAST = '.mk-pop, .mk-note, .mk-bars i, .mk-mkt__chart i, .mk-maint__list b';
+
+	// A glowing spark that flies from the code to a piece of the stage.
+	function spark( panel, fromX, fromY, target, delay ) {
+		if ( ! target || ! target.getBoundingClientRect || ! panel.animate ) {
+			return;
+		}
+		var pr = panel.getBoundingClientRect();
+		var tr = target.getBoundingClientRect();
+		var x1 = fromX - pr.left;
+		var y1 = fromY - pr.top;
+		var x2 = tr.left + tr.width / 2 - pr.left;
+		var y2 = tr.top + Math.min( tr.height / 2, 40 ) - pr.top;
+		var lift = Math.max( 40, Math.abs( x2 - x1 ) * 0.18 );
+		var count = 5;
+		for ( var n = 0; n < count; n++ ) {
+			var dot = document.createElement( 'span' );
+			dot.className = 'fx-spark';
+			var size = 10 - n * 1.4;
+			dot.style.width = size + 'px';
+			dot.style.height = size + 'px';
+			panel.appendChild( dot );
+			var jitter = ( Math.random() - 0.5 ) * 14;
+			var anim = dot.animate( [
+				{ transform: 'translate(' + x1 + 'px,' + y1 + 'px) scale(.4)', opacity: 0 },
+				{ transform: 'translate(' + ( x1 + ( x2 - x1 ) * 0.5 ) + 'px,' + ( Math.min( y1, y2 ) - lift + jitter ) + 'px) scale(1)', opacity: 1, offset: 0.5 },
+				{ transform: 'translate(' + x2 + 'px,' + y2 + 'px) scale(.6)', opacity: 0.2 }
+			], { duration: FLIGHT * 1000, delay: delay * 1000 + n * 60, easing: 'cubic-bezier(.4,.1,.3,1)', fill: 'both' } );
+			anim.onfinish = ( function ( el ) {
+				return function () { el.remove(); };
+			}( dot ) );
+		}
+	}
+
+	// Plan which piece of the stage each code line "casts", and when it appears.
+	function plan( panel, lines ) {
+		var stage = panel.querySelector( '.stage' );
+		var items = [];
+		if ( stage ) {
+			Array.prototype.forEach.call( stage.querySelectorAll( CAST ), function ( el ) {
+				if ( el.closest( '[data-wp-canvas]' ) ) {
+					return;
+				}
+				if ( el._d0 === undefined ) {
+					el._d0 = parseFloat( el.style.getPropertyValue( '--d' ) ) || 0;
+				}
+				items.push( el );
+			} );
+			items.sort( function ( a, b ) { return a._d0 - b._d0; } );
+		}
+
+		var ends = [];
+		var total = 0;
+		lines.forEach( function ( line, i ) {
+			total += line.length + ( i < lines.length - 1 ? 1 : 0 );
+			ends.push( total );
+		} );
+
+		var casts = lines.map( function () { return []; } );
+		items.forEach( function ( el, idx ) {
+			var k = Math.min( lines.length - 1, Math.floor( idx * lines.length / items.length ) );
+			var t = ends[ k ] * SPEED / 1000 + FLIGHT;
+			el.style.setProperty( '--d', t.toFixed( 2 ) + 's' );
+			casts[ k ].push( el );
+		} );
+		return { ends: ends, casts: casts, stage: stage };
 	}
 
 	function typeCode( panel ) {
@@ -255,32 +334,72 @@
 			lines = [];
 		}
 		var full = lines.join( '\n' );
+		var status = panel.querySelector( '.code__file' );
+		if ( status && ! status.getAttribute( 'data-label' ) ) {
+			status.setAttribute( 'data-label', status.textContent );
+		}
 		stopTyping();
 
-		if ( reduce ) {
-			out.innerHTML = highlight( full );
+		if ( reduce || ! lines.length ) {
+			out.innerHTML = renderCode( full, false );
 			return;
 		}
 
+		var info = plan( panel, lines );
+		var nextLine = 0;
 		var i = 0;
+		if ( status ) {
+			status.textContent = 'casting…';
+		}
+		if ( info.stage ) {
+			info.stage.classList.remove( 'is-cast' );
+		}
+
 		( function tick() {
 			i += 1;
-			out.innerHTML = highlight( full.slice( 0, i ) ) + '<span class="studio__caret"></span>';
+			out.innerHTML = renderCode( full.slice( 0, i ), true );
+
+			// A line has just been completed: send sparks to what it creates.
+			while ( nextLine < lines.length && i >= info.ends[ nextLine ] ) {
+				var lineEls = out.querySelectorAll( '.cl' );
+				var lr = lineEls[ nextLine ] ? lineEls[ nextLine ].getBoundingClientRect() : out.getBoundingClientRect();
+				var fx = Math.min( lr.right - 12, lr.left + 14 + lines[ nextLine ].length * 7.4 );
+				var fy = lr.top + lr.height / 2;
+				info.casts[ nextLine ].forEach( function ( el, n ) {
+					spark( panel, fx, fy, el, n * 0.08 );
+				} );
+				if ( info.casts[ nextLine ].length && info.stage ) {
+					window.setTimeout( function () {
+						info.stage.classList.add( 'is-cast' );
+					}, FLIGHT * 1000 );
+				}
+				nextLine += 1;
+			}
+
 			if ( i < full.length ) {
-				typer = window.setTimeout( tick, 20 );
+				typer = window.setTimeout( tick, SPEED );
 			} else {
-				out.innerHTML = highlight( full );
+				out.innerHTML = renderCode( full, false );
+				if ( status ) {
+					window.setTimeout( function () {
+						status.textContent = '\u2713 ' + 'done';
+					}, FLIGHT * 1000 + 300 );
+				}
 			}
 		}() );
 	}
 
 	function restart( panel ) {
 		panel.classList.remove( 'is-playing' );
-		void panel.offsetWidth; // Restart CSS animations.
-		if ( ! reduce ) {
-			panel.classList.add( 'is-playing' );
+		Array.prototype.forEach.call( panel.querySelectorAll( '.fx-spark' ), function ( el ) { el.remove(); } );
+		if ( reduce ) {
+			typeCode( panel );
+			return;
 		}
+		// Compute the casting plan first so delays are set before animations start.
 		typeCode( panel );
+		void panel.offsetWidth; // Restart CSS animations.
+		panel.classList.add( 'is-playing' );
 	}
 
 	function setTiming( on ) {
