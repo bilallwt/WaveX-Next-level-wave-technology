@@ -65,6 +65,7 @@ $items = wavex_primary_menu();
 
 								<?php if ( ! empty( $item['promo'] ) ) : ?>
 									<aside class="mega__promo">
+										<span class="mega__promo-rings" aria-hidden="true"></span>
 										<span class="mega__promo-icon"><?php echo wavex_icon( $item['promo'][0] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 										<h3><?php echo esc_html( $item['promo'][1] ); ?></h3>
 										<p><?php echo esc_html( $item['promo'][2] ); ?></p>

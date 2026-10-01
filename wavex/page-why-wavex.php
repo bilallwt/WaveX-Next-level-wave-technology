@@ -23,11 +23,13 @@ while ( have_posts() ) :
 		<?php
 	endif;
 endwhile;
+get_template_part( 'template-parts/sections/why' );
 ?>
-<section class="section section--accent" aria-label="<?php esc_attr_e( 'What to expect', 'wavex' ); ?>">
+<section class="section" aria-label="<?php esc_attr_e( 'What to expect', 'wavex' ); ?>">
+	<?php $ei = 0; ?>
 	<div class="expect">
 		<?php foreach ( wavex_expectations() as $point ) : ?>
-			<article class="expect__card">
+			<article class="expect__card expect__card--<?php echo (int) ( $ei++ % 4 ); ?>">
 				<span class="why__icon"><?php echo wavex_icon( $point[0] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				<h2><?php echo esc_html( $point[1] ); ?></h2>
 				<p><?php echo esc_html( $point[2] ); ?></p>

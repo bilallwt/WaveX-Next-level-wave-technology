@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php $wx = wavex_contact(); ?>
 <div class="topbar">
 	<div class="topbar__inner">
-		<p class="topbar__tag"><strong><?php esc_html_e( 'Technology built around your business', 'wavex' ); ?></strong> <span><?php esc_html_e( 'Websites. Apps. Digital growth.', 'wavex' ); ?></span></p>
+		<p class="topbar__tag"><i class="topbar__pulse" aria-hidden="true"></i><strong><?php esc_html_e( 'Technology built around your business', 'wavex' ); ?></strong> <span><?php esc_html_e( 'Websites. Apps. Digital growth.', 'wavex' ); ?></span></p>
 		<ul class="topbar__links">
 			<li><a href="<?php echo esc_url( wavex_url( 'contact' ) ); ?>"><?php esc_html_e( 'Contact our team', 'wavex' ); ?></a></li>
 			<?php if ( $wx['whatsapp'] ) : ?>
