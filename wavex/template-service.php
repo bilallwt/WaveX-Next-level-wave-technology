@@ -20,6 +20,8 @@ $details  = wavex_service_details();
 $scenes   = wavex_studio_scenes();
 $detail   = isset( $details[ $slug ] ) ? $details[ $slug ] : null;
 $scene    = isset( $scenes[ $slug ] ) ? $scenes[ $slug ] : null;
+$rich_all = wavex_service_content();
+$rich     = isset( $rich_all[ $slug ] ) ? $rich_all[ $slug ] : null;
 $svc      = isset( $services[ $slug ] ) ? $services[ $slug ] : array( 'icon' => 'code', 'title' => get_the_title() );
 
 $group_label = __( 'Services', 'wavex' );
@@ -70,12 +72,23 @@ while ( have_posts() ) :
 		<div class="svc-hero__copy">
 			<?php get_template_part( 'template-parts/components/breadcrumbs' ); ?>
 			<p class="eyebrow"><?php echo esc_html( $group_label ); ?></p>
-			<h1 class="svc-hero__title"><?php the_title(); ?></h1>
-			<p class="svc-hero__text"><?php echo esc_html( $detail ? $detail['intro'] : ( has_excerpt() ? get_the_excerpt() : '' ) ); ?></p>
-			<div class="hero__actions hero__actions--left">
-				<?php get_template_part( 'template-parts/components/contact-actions', null, array( 'topic' => get_the_title() ) ); ?>
-				<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'ghost' ); ?>
-			</div>
+			<?php if ( $rich ) : ?>
+				<h1 class="svc-hero__title"><?php echo esc_html( $rich['h1'] ); ?></h1>
+				<?php foreach ( $rich['hero'] as $hi => $hp ) : ?>
+					<p class="svc-hero__text<?php echo $hi ? ' svc-hero__text--more' : ''; ?>"><?php echo esc_html( $hp ); ?></p>
+				<?php endforeach; ?>
+				<div class="hero__actions hero__actions--left">
+					<?php wavex_cta_button( $rich['cta'][0], get_the_title(), 'whatsapp' ); ?>
+					<?php wavex_button( isset( $rich['cta'][1] ) ? $rich['cta'][1] : __( 'Contact WaveX Technology', 'wavex' ), wavex_url( 'contact' ), 'ghost' ); ?>
+				</div>
+			<?php else : ?>
+				<h1 class="svc-hero__title"><?php the_title(); ?></h1>
+				<p class="svc-hero__text"><?php echo esc_html( $detail ? $detail['intro'] : ( has_excerpt() ? get_the_excerpt() : '' ) ); ?></p>
+				<div class="hero__actions hero__actions--left">
+					<?php get_template_part( 'template-parts/components/contact-actions', null, array( 'topic' => get_the_title() ) ); ?>
+					<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'ghost' ); ?>
+				</div>
+			<?php endif; ?>
 		</div>
 		<div class="svc-hero__vis" data-vis>
 			<?php get_template_part( 'template-parts/components/service-art', null, array( 'slug' => $slug ) ); ?>
@@ -92,7 +105,9 @@ while ( have_posts() ) :
 		</ul>
 	</nav>
 
-	<?php if ( $detail ) : ?>
+	<?php if ( $rich ) : ?>
+		<?php get_template_part( 'template-parts/service/rich', null, array( 'slug' => $slug, 'rich' => $rich, 'group_id' => $group_id, 'scene' => (bool) $scene ) ); ?>
+	<?php elseif ( $detail ) : ?>
 		<section class="section" id="overview" aria-labelledby="svc-inc">
 			<div class="svc-grid">
 				<div>
@@ -123,23 +138,11 @@ while ( have_posts() ) :
 		<div class="wrap wrap--narrow" id="overview"><div class="entry-content"><?php the_content(); ?></div></div>
 	<?php endif; ?>
 
-	<?php if ( $scene ) : ?>
-		<section class="studio studio--single" id="svc-how" aria-labelledby="svc-how-title">
-			<div class="studio__inner">
-				<header class="studio__head studio__head--left">
-					<p class="eyebrow"><?php esc_html_e( 'See how it works', 'wavex' ); ?></p>
-					<h2 class="section__title" id="svc-how-title"><?php esc_html_e( 'What happens behind the scenes', 'wavex' ); ?></h2>
-					<p><em><?php esc_html_e( 'An illustration of the process.', 'wavex' ); ?></em></p>
-				</header>
-				<div class="sx sx--single" data-studio-single>
-					<div class="studio__main">
-						<?php get_template_part( 'template-parts/components/scene-panel', null, array( 'slug' => $slug, 'gkey' => $group_id, 'single' => true ) ); ?>
-					</div>
-				</div>
-			</div>
-		</section>
+	<?php if ( $scene && ! $rich ) : ?>
+		<?php get_template_part( 'template-parts/service/scene', null, array( 'slug' => $slug, 'group_id' => $group_id ) ); ?>
 	<?php endif; ?>
 
+	<?php if ( ! $rich ) : ?>
 	<section class="section" id="svc-process" aria-labelledby="svc-proc-title">
 		<p class="eyebrow"><?php esc_html_e( 'From the first conversation', 'wavex' ); ?></p>
 		<h2 class="section__title" id="svc-proc-title"><?php esc_html_e( 'A clear path to launch.', 'wavex' ); ?></h2>
@@ -158,7 +161,9 @@ while ( have_posts() ) :
 		<p><a class="link-arrow" href="<?php echo esc_url( wavex_url( 'our-approach' ) ); ?>"><?php esc_html_e( 'Explore our full process', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a></p>
 	</section>
 
-	<?php if ( $detail ) : ?>
+	<?php endif; ?>
+
+	<?php if ( $detail && ! $rich ) : ?>
 		<section class="section section--tint" id="svc-faq" aria-labelledby="svc-faq-title">
 			<div class="faq">
 				<div class="faq__intro">
@@ -192,5 +197,7 @@ while ( have_posts() ) :
 	<?php
 endwhile;
 
-get_template_part( 'template-parts/sections/contact-split' );
+if ( ! $rich ) {
+	get_template_part( 'template-parts/sections/contact-split' );
+}
 get_footer();

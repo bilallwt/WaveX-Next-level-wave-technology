@@ -461,3 +461,40 @@ function wavex_ring_v( $variant, $items, $core_html, $class = '' ) {
 
 	printf( '<div class="rg rg--%s %s"><svg viewBox="0 0 440 440" class="rg__svg" aria-hidden="true" focusable="false">%s</svg><div class="rg__core">%s</div>%s</div>', esc_attr( $variant ), esc_attr( $class ), $svg, $core_html, $badges ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
+
+/**
+ * Button that opens WhatsApp (or email when no number is set) with the topic pre-filled.
+ *
+ * @param string $label   Button text.
+ * @param string $topic   Subject of the enquiry.
+ * @param string $variant whatsapp|email.
+ */
+function wavex_cta_button( $label, $topic = '', $variant = 'whatsapp' ) {
+	$contact = wavex_contact( $topic );
+	if ( 'whatsapp' === $variant && $contact['whatsapp'] ) {
+		printf(
+			'<a class="btn btn--whatsapp" href="%1$s" target="_blank" rel="noopener">%2$s%3$s</a>',
+			esc_url( $contact['whatsapp'] ),
+			wavex_icon( 'whatsapp' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			esc_html( $label )
+		);
+		return;
+	}
+	printf(
+		'<a class="btn btn--primary" href="%1$s">%2$s%3$s</a>',
+		esc_url( $contact['email_url'] ),
+		wavex_icon( 'mail' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		esc_html( $label )
+	);
+}
+
+/**
+ * Resolve an internal link slug from the service copy to a URL.
+ *
+ * @param string $slug Service slug or page slug.
+ * @return string
+ */
+function wavex_content_link( $slug ) {
+	$services = wavex_services();
+	return isset( $services[ $slug ] ) ? wavex_url( 'services/' . $slug ) : wavex_url( $slug );
+}

@@ -17,6 +17,8 @@ require_once WAVEX_DIR . '/inc/helpers.php';
 require_once WAVEX_DIR . '/inc/data.php';
 require_once WAVEX_DIR . '/inc/studio-data.php';
 require_once WAVEX_DIR . '/inc/pages-data.php';
+require_once WAVEX_DIR . '/inc/service-content.php';
+require_once WAVEX_DIR . '/inc/seo.php';
 require_once WAVEX_DIR . '/inc/forms.php';
 require_once WAVEX_DIR . '/inc/setup.php';
 require_once WAVEX_DIR . '/inc/enqueue.php';
