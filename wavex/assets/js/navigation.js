@@ -11,7 +11,52 @@
 		return;
 	}
 
+	// Footer link groups: always open on wide screens, accordion on small ones.
+	var footCols = document.querySelectorAll( '.ft__col' );
+	var wide = window.matchMedia( '(min-width: 801px)' );
+	function syncFooter() {
+		Array.prototype.forEach.call( footCols, function ( d ) {
+			if ( wide.matches ) {
+				d.open = true;
+			} else if ( ! d.hasAttribute( 'data-seen' ) ) {
+				d.open = false;
+			}
+			d.setAttribute( 'data-seen', '1' );
+		} );
+	}
+	Array.prototype.forEach.call( footCols, function ( d ) {
+		d.querySelector( 'summary' ).addEventListener( 'click', function ( e ) {
+			if ( wide.matches ) {
+				e.preventDefault();
+			}
+		} );
+	} );
+	syncFooter();
+	window.addEventListener( 'resize', syncFooter );
+
 	var items = nav.querySelectorAll( '.has-mega' );
+
+	// Mega menu: hover or focus a category on the left to show its links on the right.
+	Array.prototype.forEach.call( nav.querySelectorAll( '[data-mx]' ), function ( mx ) {
+		var tabs = mx.querySelectorAll( '.mx2__tab' );
+		var panes = mx.querySelectorAll( '.mx2__pane' );
+		function activate( i ) {
+			Array.prototype.forEach.call( tabs, function ( t, n ) {
+				t.classList.toggle( 'is-active', n === i );
+				t.setAttribute( 'aria-selected', n === i ? 'true' : 'false' );
+			} );
+			Array.prototype.forEach.call( panes, function ( p, n ) {
+				p.classList.toggle( 'is-active', n === i );
+			} );
+		}
+		Array.prototype.forEach.call( tabs, function ( t, n ) {
+			[ 'mouseenter', 'focus', 'click' ].forEach( function ( ev ) {
+				t.addEventListener( ev, function () { activate( n ); } );
+			} );
+		} );
+		mx.setAttribute( 'data-ready', '1' );
+		activate( 0 );
+	} );
 
 	function closeAll( except ) {
 		items.forEach( function ( item ) {

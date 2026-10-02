@@ -55,43 +55,55 @@ $wx = wavex_contact();
 
 					<div class="mega" id="<?php echo esc_attr( $mega_id ); ?>" style="--g: <?php echo esc_attr( $mega_tone[0] ); ?>; --g-t: <?php echo esc_attr( $mega_tone[1] ); ?>;">
 						<div class="mega__panel">
-							<div class="mx<?php echo ! empty( $item['promo'] ) ? ' mx--promo' : ''; ?>">
-								<?php if ( ! empty( $item['promo'] ) ) : ?>
-									<aside class="mx__side">
-										<span class="mx__rings" aria-hidden="true"></span>
-										<span class="mx__side-icon"><?php echo wavex_icon( $item['promo'][0] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-										<h3><?php echo esc_html( $item['promo'][1] ); ?></h3>
-										<p><?php echo esc_html( $item['promo'][2] ); ?></p>
-										<a class="btn btn--primary" href="<?php echo esc_url( wavex_url( $item['promo'][4] ) ); ?>"><?php echo esc_html( $item['promo'][3] ); ?></a>
-									</aside>
-								<?php endif; ?>
-								<div class="mx__main">
-									<div class="mx__top">
-										<span class="mx__kicker"><i></i><?php echo esc_html( $item['label'] ); ?></span>
-										<a class="mx__all" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'View everything', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
-										<button type="button" class="mega__close"><span class="screen-reader-text"><?php esc_html_e( 'Close', 'wavex' ); ?></span><?php echo wavex_icon( 'close' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></button>
-									</div>
-									<div class="mx__cols" style="--n: <?php echo (int) count( $item['columns'] ); ?>;">
-										<?php foreach ( $item['columns'] as $column ) : ?>
-											<section class="mx__col" aria-label="<?php echo esc_attr( $column['title'] ); ?>">
-												<h3 class="mx__title"><?php echo esc_html( $column['title'] ); ?></h3>
-												<ul>
-													<?php
-													foreach ( $column['links'] as $link ) :
-														$meta = wavex_link_meta( $link[1] );
-														?>
-														<li>
-															<a class="mx-tile" href="<?php echo esc_url( wavex_url( $link[1] ) ); ?>">
-																<span class="mx-tile__icon"><?php echo wavex_icon( $meta['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-																<span class="mx-tile__txt"><strong><?php echo esc_html( $link[0] ); ?></strong><?php echo $meta['desc'] ? '<em>' . esc_html( $meta['desc'] ) . '</em>' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-															</a>
-														</li>
-													<?php endforeach; ?>
-												</ul>
-											</section>
+							<div class="mx2" data-mx>
+								<div class="mx2__rail">
+									<p class="mx2__kicker"><i></i><?php echo esc_html( $item['label'] ); ?></p>
+									<div class="mx2__tabs">
+										<?php
+										foreach ( $item['columns'] as $ci => $column ) :
+											$head_meta = wavex_link_meta( $column['links'][0][1] );
+											?>
+											<button type="button" class="mx2__tab" data-pane="<?php echo (int) $ci; ?>" aria-controls="<?php echo esc_attr( $mega_id . '-p' . $ci ); ?>">
+												<span class="mx2__tab-ico"><?php echo wavex_icon( $head_meta['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+												<span class="mx2__tab-t"><?php echo esc_html( $column['title'] ); ?></span>
+												<span class="mx2__tab-n"><?php echo (int) count( $column['links'] ); ?></span>
+											</button>
 										<?php endforeach; ?>
 									</div>
+									<?php if ( ! empty( $item['promo'] ) ) : ?>
+										<a class="mx2__promo" href="<?php echo esc_url( wavex_url( $item['promo'][4] ) ); ?>">
+											<span class="mx2__promo-ico"><?php echo wavex_icon( $item['promo'][0] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+											<strong><?php echo esc_html( $item['promo'][1] ); ?></strong>
+											<span class="mx2__promo-text"><?php echo esc_html( $item['promo'][2] ); ?></span>
+											<em><?php echo esc_html( $item['promo'][3] ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></em>
+										</a>
+									<?php endif; ?>
 								</div>
+								<div class="mx2__panes">
+									<?php foreach ( $item['columns'] as $ci => $column ) : ?>
+										<section class="mx2__pane" id="<?php echo esc_attr( $mega_id . '-p' . $ci ); ?>" data-pane="<?php echo (int) $ci; ?>" aria-label="<?php echo esc_attr( $column['title'] ); ?>">
+											<h3 class="mx2__ptitle"><?php echo esc_html( $column['title'] ); ?></h3>
+											<ul class="mx2__grid">
+												<?php
+												foreach ( $column['links'] as $link ) :
+													$meta = wavex_link_meta( $link[1] );
+													?>
+													<li>
+														<a class="mx2-card" href="<?php echo esc_url( wavex_url( $link[1] ) ); ?>">
+															<span class="mx2-card__ico"><?php echo wavex_icon( $meta['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+															<span class="mx2-card__txt"><strong><?php echo esc_html( $link[0] ); ?></strong><?php echo $meta['desc'] ? '<em>' . esc_html( $meta['desc'] ) . '</em>' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+															<span class="mx2-card__go"><?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+														</a>
+													</li>
+												<?php endforeach; ?>
+											</ul>
+										</section>
+									<?php endforeach; ?>
+									<div class="mx2__foot">
+										<a class="mx2__all" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'View everything', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+									</div>
+								</div>
+								<button type="button" class="mega__close"><span class="screen-reader-text"><?php esc_html_e( 'Close', 'wavex' ); ?></span><?php echo wavex_icon( 'close' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></button>
 							</div>
 						</div>
 					</div>

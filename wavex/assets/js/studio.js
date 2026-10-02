@@ -495,13 +495,32 @@
 			tab.setAttribute( 'aria-selected', on ? 'true' : 'false' );
 			tab.setAttribute( 'tabindex', on ? '0' : '-1' );
 			panels[ n ].hidden = ! on;
-			if ( grp ) {
+			if ( grp && ! root.hasAttribute( 'data-all-tabs' ) ) {
 				tab.hidden = tab.getAttribute( 'data-group' ) !== grp;
 			}
 			if ( ! on && panels[ n ]._wp ) {
 				panels[ n ]._wp.stop();
 			}
 		} );
+		// Spell circle: show the chosen service in the core and cast a burst.
+		if ( tabs[ current ] && root.querySelector( '[data-mg-name]' ) ) {
+			var tabEl = tabs[ current ];
+			var nameEl = root.querySelector( '[data-mg-name]' );
+			var iconEl = root.querySelector( '[data-mg-icon]' );
+			var grpEl = root.querySelector( '[data-mg-group]' );
+			var label = tabEl.querySelector( '.studio__tab-label' );
+			var icon = tabEl.querySelector( '.studio__tab-icon' );
+			var gl = root.querySelector( '.sx__pill[data-group="' + grp + '"]' );
+			if ( nameEl && label ) { nameEl.textContent = label.textContent; }
+			if ( iconEl && icon ) { iconEl.innerHTML = icon.innerHTML; }
+			if ( grpEl && gl ) { grpEl.textContent = gl.textContent.replace( /\d+\s*$/, '' ).trim(); }
+			var circle = root.querySelector( '.mg__circle' );
+			if ( circle && ! reduce ) {
+				circle.classList.remove( 'is-cast' );
+				void circle.offsetWidth;
+				circle.classList.add( 'is-cast' );
+			}
+		}
 		if ( focus && tabs[ current ] ) {
 			tabs[ current ].focus();
 		}

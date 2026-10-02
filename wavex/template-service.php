@@ -79,31 +79,62 @@ while ( have_posts() ) :
 	?>
 	<div class="gtheme gtheme--<?php echo esc_attr( $group_id ); ?>">
 
-	<header class="svc-hero">
-		<span class="svc-hero__orb" aria-hidden="true"></span>
-		<div class="svc-hero__copy">
-			<?php get_template_part( 'template-parts/components/breadcrumbs' ); ?>
-			<p class="eyebrow"><?php echo esc_html( $group_label ); ?></p>
-			<?php if ( $rich ) : ?>
-				<h1 class="svc-hero__title"><?php echo esc_html( $rich['h1'] ); ?></h1>
-				<?php foreach ( $rich['hero'] as $hi => $hp ) : ?>
-					<p class="svc-hero__text<?php echo $hi ? ' svc-hero__text--more' : ''; ?>"><?php echo esc_html( $hp ); ?></p>
-				<?php endforeach; ?>
-				<div class="hero__actions hero__actions--left">
-					<?php wavex_cta_button( $rich['cta'][0], get_the_title(), 'whatsapp' ); ?>
-					<?php wavex_button( isset( $rich['cta'][1] ) ? $rich['cta'][1] : __( 'Contact WaveX Technology', 'wavex' ), wavex_url( 'contact' ), 'ghost' ); ?>
-				</div>
-			<?php else : ?>
-				<h1 class="svc-hero__title"><?php the_title(); ?></h1>
-				<p class="svc-hero__text"><?php echo esc_html( $detail ? $detail['intro'] : ( has_excerpt() ? get_the_excerpt() : '' ) ); ?></p>
-				<div class="hero__actions hero__actions--left">
-					<?php get_template_part( 'template-parts/components/contact-actions', null, array( 'topic' => get_the_title() ) ); ?>
-					<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'ghost' ); ?>
-				</div>
-			<?php endif; ?>
-		</div>
-		<div class="svc-hero__vis" data-vis>
-			<?php get_template_part( 'template-parts/components/service-art', null, array( 'slug' => $slug ) ); ?>
+	<?php
+	// Real counts from this page's own content, shown as facts in the banner.
+	$facts = array();
+	if ( $rich ) {
+		$areas = 0;
+		$steps_n = 0;
+		$faq_n = 0;
+		foreach ( $rich['sections'] as $rsec2 ) {
+			if ( 'content' === $rsec2['kind'] ) {
+				++$areas;
+			} elseif ( 'process' === $rsec2['kind'] ) {
+				$steps_n = count( $rsec2['subs'] );
+			} elseif ( 'faq' === $rsec2['kind'] ) {
+				$faq_n = count( $rsec2['subs'] );
+			}
+		}
+		$facts = array( array( $areas, __( 'areas covered', 'wavex' ) ), array( $steps_n, __( 'step process', 'wavex' ) ), array( $faq_n, __( 'questions answered', 'wavex' ) ) );
+	} elseif ( $detail ) {
+		$facts = array( array( count( $detail['includes'] ), __( 'things included', 'wavex' ) ), array( count( $flow ), __( 'step process', 'wavex' ) ), array( count( $detail['faqs'] ), __( 'questions answered', 'wavex' ) ) );
+	}
+	?>
+	<header class="bn bn--svc">
+		<div class="bn__bg" aria-hidden="true"><i class="bn__orb bn__orb--1"></i><i class="bn__orb bn__orb--2"></i></div>
+		<div class="bn__inner bn__grid">
+			<div class="bn__copy">
+				<?php get_template_part( 'template-parts/components/breadcrumbs' ); ?>
+				<p class="bn__eyebrow"><span class="bn__eyebrow-icon"><?php echo wavex_icon( $svc['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span><?php echo esc_html( $group_label ); ?></p>
+				<?php if ( $rich ) : ?>
+					<h1 class="bn__title"><?php echo esc_html( $rich['h1'] ); ?></h1>
+					<?php foreach ( $rich['hero'] as $hi => $hp ) : ?>
+						<p class="bn__text<?php echo $hi ? ' bn__text--more' : ''; ?>"><?php echo esc_html( $hp ); ?></p>
+					<?php endforeach; ?>
+					<div class="bn__actions">
+						<?php wavex_cta_button( $rich['cta'][0], get_the_title(), 'whatsapp' ); ?>
+						<?php wavex_button( isset( $rich['cta'][1] ) ? $rich['cta'][1] : __( 'Contact WaveX Technology', 'wavex' ), wavex_url( 'contact' ), 'ghost' ); ?>
+					</div>
+				<?php else : ?>
+					<h1 class="bn__title"><?php the_title(); ?></h1>
+					<p class="bn__text"><?php echo esc_html( $detail ? $detail['intro'] : ( has_excerpt() ? get_the_excerpt() : '' ) ); ?></p>
+					<div class="bn__actions">
+						<?php wavex_cta_button( __( 'Chat on WhatsApp', 'wavex' ), get_the_title(), 'whatsapp' ); ?>
+						<?php wavex_cta_button( __( 'Email us', 'wavex' ), get_the_title(), 'email' ); ?>
+						<?php wavex_button( __( 'Free Consultation', 'wavex' ), wavex_url( 'free-consultation' ), 'ghost' ); ?>
+					</div>
+				<?php endif; ?>
+				<?php if ( $facts ) : ?>
+					<ul class="bn__facts">
+						<?php foreach ( $facts as $fact ) : ?>
+							<li><strong><?php echo (int) $fact[0]; ?></strong><span><?php echo esc_html( $fact[1] ); ?></span></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+			</div>
+			<div class="bn__art" data-vis>
+				<?php get_template_part( 'template-parts/components/service-art', null, array( 'slug' => $slug ) ); ?>
+			</div>
 		</div>
 	</header>
 
@@ -203,18 +234,37 @@ while ( have_posts() ) :
 	<?php endif; ?>
 
 	<?php if ( $related && ! ( $rich && $has_rel_section ) ) : ?>
-		<section class="section" aria-labelledby="svc-rel">
-			<header class="section__head"><div><p class="eyebrow"><?php esc_html_e( 'Connect the pieces', 'wavex' ); ?></p><h2 class="section__title" id="svc-rel"><?php esc_html_e( 'Explore related services.', 'wavex' ); ?></h2></div>
-				<a class="link-arrow" href="<?php echo esc_url( wavex_url( 'services' ) ); ?>"><?php esc_html_e( 'All services', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a></header>
-			<div class="card-grid card-grid--4">
-				<?php foreach ( array_slice( $related, 0, 4 ) as $other ) : ?>
-					<a class="service-card" href="<?php echo esc_url( wavex_url( 'services/' . $other ) ); ?>">
-						<span class="service-card__icon"><?php echo wavex_icon( $services[ $other ]['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-						<h3 class="service-card__title"><?php echo esc_html( $services[ $other ]['title'] ); ?></h3>
-						<p class="service-card__text"><?php echo esc_html( $services[ $other ]['text'] ); ?></p>
-						<span class="service-card__go"><?php esc_html_e( 'Explore service', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-					</a>
-				<?php endforeach; ?>
+		<section class="rel" aria-labelledby="svc-rel">
+			<div class="rel__inner">
+				<header class="rel__head">
+					<div>
+						<p class="eyebrow"><?php esc_html_e( 'Connect the pieces', 'wavex' ); ?></p>
+						<h2 class="section__title" id="svc-rel"><?php esc_html_e( 'Explore related services', 'wavex' ); ?></h2>
+						<p class="rel__lead"><?php esc_html_e( 'Projects rarely stop at one service. These ones fit naturally with the page you just read.', 'wavex' ); ?></p>
+					</div>
+					<a class="btn btn--ghost" href="<?php echo esc_url( wavex_url( 'services' ) ); ?>"><?php esc_html_e( 'All services', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+				</header>
+				<ul class="rel__row">
+					<?php foreach ( array_slice( $related, 0, 4 ) as $ri => $other ) : ?>
+						<?php
+						$o_group = 'web';
+						foreach ( wavex_studio_groups() as $o_gid => $o_g ) {
+							if ( in_array( $other, $o_g['services'], true ) ) {
+								$o_group = $o_gid;
+							}
+						}
+						?>
+						<li class="gtheme gtheme--<?php echo esc_attr( $o_group ); ?>">
+							<a class="rel-card" href="<?php echo esc_url( wavex_url( 'services/' . $other ) ); ?>">
+								<span class="rel-card__badge"><span><?php echo wavex_icon( $services[ $other ]['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span></span>
+								<span class="rel-card__no"><?php echo esc_html( str_pad( (string) ( $ri + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
+								<h3 class="rel-card__title"><?php echo esc_html( $services[ $other ]['title'] ); ?></h3>
+								<p class="rel-card__text"><?php echo esc_html( $services[ $other ]['text'] ); ?></p>
+								<span class="rel-card__go"><?php esc_html_e( 'Explore', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+							</a>
+						</li>
+					<?php endforeach; ?>
+				</ul>
 			</div>
 		</section>
 	<?php endif; ?>

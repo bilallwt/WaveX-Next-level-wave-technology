@@ -62,6 +62,20 @@ function wavex_enqueue_assets() {
 		);
 	}
 
+	if ( is_page_template( 'template-services.php' ) ) {
+		$sv = WAVEX_DIR . '/assets/js/services.js';
+		wp_enqueue_script(
+			'wavex-services',
+			WAVEX_URI . '/assets/js/services.js',
+			array(),
+			file_exists( $sv ) ? filemtime( $sv ) : WAVEX_VERSION,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+	}
+
 	$vis = WAVEX_DIR . '/assets/js/visuals.js';
 	wp_enqueue_script(
 		'wavex-visuals',
