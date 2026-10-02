@@ -28,6 +28,7 @@
 
 	function setDrawer( open ) {
 		nav.classList.toggle( 'is-open', open );
+		document.body.classList.toggle( 'nav-open', open );
 		burger.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
 		if ( ! open ) {
 			closeAll();

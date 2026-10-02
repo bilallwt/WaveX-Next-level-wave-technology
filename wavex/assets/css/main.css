@@ -2139,3 +2139,45 @@ a.rg__badge:hover { animation-play-state: paused; }
 .rg--svc .rg__badge { color: var(--g); }
 @media (max-width: 600px) { .sa-chip { font-size: .74rem; padding: 7px 12px 7px 8px; } .sa-flow ol { grid-template-columns: 1fr 1fr; row-gap: 22px; } .sa-flow ol::before { display: none; } }
 @media (prefers-reduced-motion: reduce) { .sa-core, .sa-chip, .sa-flow__node, .sa-cloud__lines path { animation: none; } }
+
+/* ===== Mobile pass: later rules so they beat the desktop layers above ===== */
+@media (max-width: 900px) {
+	.hero, .gtheme .svc-hero, .svc-hero { grid-template-columns: 1fr; gap: 28px; }
+	.hero__visual { max-width: 460px; margin: 0 auto; width: 100%; }
+	.hero__shapes { display: none; }
+	.hr { max-width: 460px; }
+	.pj__cover, .pj--lg .pj__cover { flex: none; }
+	.site-footer__top { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
+	.site-footer__brand { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+	.hero { padding-top: 28px; padding-bottom: 64px; }
+	.hero__title { font-size: clamp(2rem, 9vw, 2.6rem); max-width: none; }
+	.hero__actions, .final-cta .hero__actions, .contact-actions { flex-direction: column; align-items: stretch; }
+	.hero__actions .btn, .contact-actions .btn, .final-cta .btn, .cs .btn { width: 100%; justify-content: center; }
+	.contact-actions { width: 100%; }
+	.rg--pj { max-width: 210px; }
+	.pj__cover { min-height: 0; padding: 18px; }
+	.final-cta__inner { padding-left: 20px; padding-right: 20px; }
+	.site-footer__top { grid-template-columns: 1fr 1fr; }
+	.site-footer__bottom, .site-footer__legal ul { flex-wrap: wrap; }
+}
+
+/* Mobile pass 2: drawer, tap targets, spacing */
+@media (max-width: 1024px) {
+	.primary-nav { max-height: calc(100vh - 90px); max-height: calc(100dvh - 90px); padding-bottom: 28px; overscroll-behavior: contain; }
+	.primary-nav__link { min-height: 48px; display: flex; align-items: center; }
+	.mega__links a { min-height: 44px; display: flex; align-items: center; }
+	.nav-open .dock { display: none; }
+}
+@media (max-width: 640px) {
+	body { padding-bottom: 84px; }
+	.service-card { min-height: 0; }
+	.card-grid { gap: 14px; }
+	.site-footer__col a { padding: 4px 0; }
+	.site-footer__col li { margin-bottom: 4px; }
+	.page-hero { padding-top: 28px; padding-bottom: 44px; }
+	.btn { min-height: 46px; }
+	.sx__pill, .studio__tab { min-height: 44px; }
+	.faq__q, .faq summary { min-height: 48px; }
+}
