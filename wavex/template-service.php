@@ -22,6 +22,14 @@ $detail   = isset( $details[ $slug ] ) ? $details[ $slug ] : null;
 $scene    = isset( $scenes[ $slug ] ) ? $scenes[ $slug ] : null;
 $rich_all = wavex_service_content();
 $rich     = isset( $rich_all[ $slug ] ) ? $rich_all[ $slug ] : null;
+$has_rel_section = false;
+if ( $rich ) {
+	foreach ( $rich['sections'] as $rsec ) {
+		if ( 'related' === $rsec['kind'] ) {
+			$has_rel_section = true;
+		}
+	}
+}
 $svc      = isset( $services[ $slug ] ) ? $services[ $slug ] : array( 'icon' => 'code', 'title' => get_the_title() );
 
 $group_label = __( 'Services', 'wavex' );
@@ -36,7 +44,11 @@ foreach ( wavex_studio_groups() as $gid => $group ) {
 	}
 }
 
-// Other services in the same area: shown on the ring and as related cards.
+$related_map = wavex_related_services();
+$related     = isset( $related_map[ $slug ] ) ? $related_map[ $slug ] : array();
+wavex_autolink_state( true );
+
+// Other services in the same area: shown on the ring.
 $others = array();
 if ( $group_key ) {
 	foreach ( $group_key['services'] as $other ) {
@@ -105,6 +117,8 @@ while ( have_posts() ) :
 		</ul>
 	</nav>
 
+	<?php get_template_part( 'template-parts/service/works-with', null, array( 'slug' => $slug ) ); ?>
+
 	<?php if ( $rich ) : ?>
 		<?php get_template_part( 'template-parts/service/rich', null, array( 'slug' => $slug, 'rich' => $rich, 'group_id' => $group_id, 'scene' => (bool) $scene ) ); ?>
 	<?php elseif ( $detail ) : ?>
@@ -141,6 +155,9 @@ while ( have_posts() ) :
 	<?php if ( $scene && ! $rich ) : ?>
 		<?php get_template_part( 'template-parts/service/scene', null, array( 'slug' => $slug, 'group_id' => $group_id ) ); ?>
 	<?php endif; ?>
+	<?php if ( ! $rich ) : ?>
+		<?php get_template_part( 'template-parts/service/cta-band', null, array( 'topic' => get_the_title() ) ); ?>
+	<?php endif; ?>
 
 	<?php if ( ! $rich ) : ?>
 	<section class="section" id="svc-process" aria-labelledby="svc-proc-title">
@@ -171,17 +188,21 @@ while ( have_posts() ) :
 					<h2 class="section__title" id="svc-faq-title"><?php esc_html_e( 'Your questions, answered.', 'wavex' ); ?></h2>
 					<a class="link-arrow" href="<?php echo esc_url( wavex_url( 'faq' ) ); ?>"><?php esc_html_e( 'View all FAQs', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
 				</div>
-				<?php get_template_part( 'template-parts/components/faq-list', null, array( 'items' => $detail['faqs'], 'open_first' => true ) ); ?>
+				<?php get_template_part( 'template-parts/components/faq-list', null, array( 'items' => $detail['faqs'], 'open_first' => true, 'link_slug' => $slug ) ); ?>
 			</div>
 		</section>
 	<?php endif; ?>
 
-	<?php if ( $others ) : ?>
+	<?php if ( ! $rich ) : ?>
+		<?php get_template_part( 'template-parts/service/cta-band', null, array( 'title' => __( 'Still have a question?', 'wavex' ), 'text' => __( 'Ask us directly on WhatsApp or by email.', 'wavex' ), 'topic' => get_the_title() . ': ' . __( 'question', 'wavex' ) ) ); ?>
+	<?php endif; ?>
+
+	<?php if ( $related && ! ( $rich && $has_rel_section ) ) : ?>
 		<section class="section" aria-labelledby="svc-rel">
 			<header class="section__head"><div><p class="eyebrow"><?php esc_html_e( 'Connect the pieces', 'wavex' ); ?></p><h2 class="section__title" id="svc-rel"><?php esc_html_e( 'Explore related services.', 'wavex' ); ?></h2></div>
 				<a class="link-arrow" href="<?php echo esc_url( wavex_url( 'services' ) ); ?>"><?php esc_html_e( 'All services', 'wavex' ); ?> <?php echo wavex_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a></header>
-			<div class="card-grid card-grid--3">
-				<?php foreach ( array_slice( $others, 0, 3 ) as $other ) : ?>
+			<div class="card-grid card-grid--4">
+				<?php foreach ( array_slice( $related, 0, 4 ) as $other ) : ?>
 					<a class="service-card" href="<?php echo esc_url( wavex_url( 'services/' . $other ) ); ?>">
 						<span class="service-card__icon"><?php echo wavex_icon( $services[ $other ]['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 						<h3 class="service-card__title"><?php echo esc_html( $services[ $other ]['title'] ); ?></h3>

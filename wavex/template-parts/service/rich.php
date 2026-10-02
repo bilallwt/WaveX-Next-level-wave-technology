@@ -14,6 +14,14 @@ $slug     = $args['slug'];
 $rich     = $args['rich'];
 $group_id = $args['group_id'];
 $topic    = get_the_title();
+wavex_autolink_state( true );
+foreach ( $rich['sections'] as $sec_pre ) {
+	foreach ( array_merge( array( $sec_pre ), isset( $sec_pre['subs'] ) ? $sec_pre['subs'] : array() ) as $blk ) {
+		foreach ( isset( $blk['links'] ) ? $blk['links'] : array() as $l ) {
+			wavex_autolink_mark( $l[0] );
+		}
+	}
+}
 $icons    = array( 'chat', 'compass', 'code', 'check', 'rocket', 'refresh', 'shield' );
 
 $content = array();
@@ -31,9 +39,9 @@ foreach ( $rich['sections'] as $sec ) {
  *
  * @param array $b Block with optional paras, bullets, after, links.
  */
-$render_block = static function ( $b ) {
+$render_block = static function ( $b ) use ( $slug ) {
 	foreach ( isset( $b['paras'] ) ? $b['paras'] : array() as $p ) {
-		echo '<p>' . esc_html( $p ) . '</p>';
+		echo '<p>' . wavex_autolink( esc_html( $p ), $slug, 1 ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 	if ( ! empty( $b['bullets'] ) ) {
 		echo '<ul class="rs__chips">';
@@ -43,7 +51,7 @@ $render_block = static function ( $b ) {
 		echo '</ul>';
 	}
 	foreach ( isset( $b['after'] ) ? $b['after'] : array() as $p ) {
-		echo '<p>' . esc_html( $p ) . '</p>';
+		echo '<p>' . wavex_autolink( esc_html( $p ), $slug, 1 ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 	if ( ! empty( $b['links'] ) ) {
 		echo '<p class="rs__links">';
@@ -55,6 +63,7 @@ $render_block = static function ( $b ) {
 };
 
 $scene_after = min( 1, count( $content ) - 1 );
+$gap         = 0;
 foreach ( $content as $n => $sec ) :
 	$sid = 0 === $n ? 'overview' : 'sec-' . ( $n + 1 );
 	?>
@@ -90,8 +99,22 @@ foreach ( $content as $n => $sec ) :
 		</div>
 	</section>
 	<?php
+	$gap = empty( $sec['ctas'] ) ? $gap + 1 : 0;
 	if ( $n === $scene_after && $args['scene'] ) {
 		get_template_part( 'template-parts/service/scene', null, array( 'slug' => $slug, 'group_id' => $group_id ) );
+	}
+	if ( $gap >= 3 && $n < count( $content ) - 1 ) {
+		get_template_part(
+			'template-parts/service/cta-band',
+			null,
+			array(
+				'title' => sprintf( /* translators: %s: service name. */ __( 'Thinking about %s?', 'wavex' ), $topic ),
+				'text'  => __( 'Tell us what you need. A short message is enough to start.', 'wavex' ),
+				'topic' => $topic,
+				'tone'  => 'strip',
+			)
+		);
+		$gap = 0;
 	}
 endforeach;
 
@@ -183,10 +206,14 @@ if ( $groups['process'] ) :
 			foreach ( $faq['subs'] as $q ) {
 				$items[] = array( $q['title'], isset( $q['paras'] ) ? implode( ' ', $q['paras'] ) : '' );
 			}
-			get_template_part( 'template-parts/components/faq-list', null, array( 'items' => $items, 'open_first' => true ) );
+			get_template_part( 'template-parts/components/faq-list', null, array( 'items' => $items, 'open_first' => true, 'link_slug' => $slug ) );
 			?>
 		</div>
 	</section>
+<?php endif; ?>
+
+<?php if ( $groups['faq'] ) : ?>
+	<?php get_template_part( 'template-parts/service/cta-band', null, array( 'title' => __( 'Still have a question?', 'wavex' ), 'text' => __( 'Ask us directly on WhatsApp or by email.', 'wavex' ), 'topic' => $topic . ': ' . __( 'question', 'wavex' ) ) ); ?>
 <?php endif; ?>
 
 <?php if ( $groups['final'] ) : $fin = $groups['final']; ?>
