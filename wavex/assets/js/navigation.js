@@ -26,7 +26,12 @@
 		} );
 	}
 
+	var headerEl = document.getElementById( 'site-header' );
+
 	function setDrawer( open ) {
+		if ( open && headerEl ) {
+			nav.style.setProperty( '--hh', Math.max( 0, Math.round( headerEl.getBoundingClientRect().bottom ) ) + 'px' );
+		}
 		nav.classList.toggle( 'is-open', open );
 		document.body.classList.toggle( 'nav-open', open );
 		burger.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
@@ -68,6 +73,19 @@
 		}
 		if ( document.activeElement && document.activeElement.blur ) {
 			document.activeElement.blur();
+		}
+	} );
+
+	// Close the drawer when a link inside it is used, or when the layout goes back to desktop.
+	nav.addEventListener( 'click', function ( e ) {
+		var link = e.target.closest ? e.target.closest( 'a[href]' ) : null;
+		if ( link && nav.classList.contains( 'is-open' ) ) {
+			setDrawer( false );
+		}
+	} );
+	window.addEventListener( 'resize', function () {
+		if ( window.innerWidth > 1024 && nav.classList.contains( 'is-open' ) ) {
+			setDrawer( false );
 		}
 	} );
 

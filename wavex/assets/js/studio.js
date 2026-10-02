@@ -484,6 +484,9 @@
 		var count = Math.max( tabs.length, 1 );
 		current = ( index + count ) % count;
 		var grp = tabs[ current ] ? tabs[ current ].getAttribute( 'data-group' ) : null;
+		if ( grp ) {
+			root.setAttribute( 'data-active-group', grp );
+		}
 		pills.forEach( function ( pill ) {
 			pill.setAttribute( 'aria-pressed', pill.getAttribute( 'data-group' ) === grp ? 'true' : 'false' );
 		} );

@@ -498,3 +498,34 @@ function wavex_content_link( $slug ) {
 	$services = wavex_services();
 	return isset( $services[ $slug ] ) ? wavex_url( 'services/' . $slug ) : wavex_url( $slug );
 }
+
+/**
+ * Pick an icon for a section from its heading.
+ *
+ * @param string $title Section heading.
+ * @return string Icon name.
+ */
+function wavex_section_icon( $title ) {
+	$map = array(
+		'/api|integrat|webhook|sync/i'                                  => 'link',
+		'/secur|backup|protect|https|accessib/i'                         => 'shield',
+		'/perform|speed|vitals/i'                                        => 'rocket',
+		'/seo|search|crawl|index|sitemap|schema|structured/i'            => 'search',
+		'/mobile|responsive|device|screen|browser/i'                     => 'mobile',
+		'/commerce|shop|store|payment|checkout|woo|catalog|shipping/i'   => 'cart',
+		'/design|ui\b|ux|layout|theme|template|visual|brand|typograph/i' => 'layout',
+		'/test|quality|launch|deploy/i'                                  => 'check',
+		'/migrat|redesign|moderni|legacy|redirect|refresh/i'             => 'refresh',
+		'/content|page|blog|information|navigation|architecture/i'       => 'pen',
+		'/maintain|maintenance|support|monitor|update/i'                 => 'wrench',
+		'/crm|erp|business|enterprise/i'                                 => 'briefcase',
+		'/automat|workflow/i'                                            => 'grid',
+		'/software|custom|develop|plugin|saas|app/i'                     => 'code',
+	);
+	foreach ( $map as $re => $icon ) {
+		if ( preg_match( $re, $title ) ) {
+			return $icon;
+		}
+	}
+	return 'cube';
+}

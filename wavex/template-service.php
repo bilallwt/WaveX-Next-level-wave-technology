@@ -107,6 +107,7 @@ while ( have_posts() ) :
 		</div>
 	</header>
 
+	<?php if ( ! $rich ) : ?>
 	<nav class="pagebar" aria-label="<?php esc_attr_e( 'On this page', 'wavex' ); ?>">
 		<span class="pagebar__label"><?php esc_html_e( 'On this page', 'wavex' ); ?></span>
 		<ul>
@@ -116,11 +117,15 @@ while ( have_posts() ) :
 			<?php if ( $detail ) : ?><li><a href="#svc-faq"><?php esc_html_e( 'FAQs', 'wavex' ); ?></a></li><?php endif; ?>
 		</ul>
 	</nav>
+	<?php endif; ?>
 
 	<?php get_template_part( 'template-parts/service/works-with', null, array( 'slug' => $slug ) ); ?>
 
 	<?php if ( $rich ) : ?>
-		<?php get_template_part( 'template-parts/service/rich', null, array( 'slug' => $slug, 'rich' => $rich, 'group_id' => $group_id, 'scene' => (bool) $scene ) ); ?>
+		<?php if ( $scene ) : ?>
+			<?php get_template_part( 'template-parts/service/scene', null, array( 'slug' => $slug, 'group_id' => $group_id ) ); ?>
+		<?php endif; ?>
+		<?php get_template_part( 'template-parts/service/rich', null, array( 'slug' => $slug, 'rich' => $rich, 'group_id' => $group_id ) ); ?>
 	<?php elseif ( $detail ) : ?>
 		<section class="section" id="overview" aria-labelledby="svc-inc">
 			<div class="svc-grid">

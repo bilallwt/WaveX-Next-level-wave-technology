@@ -48,6 +48,20 @@ function wavex_enqueue_assets() {
 		);
 	}
 
+	if ( is_page_template( 'template-service.php' ) ) {
+		$guide = WAVEX_DIR . '/assets/js/guide.js';
+		wp_enqueue_script(
+			'wavex-guide',
+			WAVEX_URI . '/assets/js/guide.js',
+			array(),
+			file_exists( $guide ) ? filemtime( $guide ) : WAVEX_VERSION,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+	}
+
 	$vis = WAVEX_DIR . '/assets/js/visuals.js';
 	wp_enqueue_script(
 		'wavex-visuals',
